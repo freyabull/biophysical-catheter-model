@@ -1,6 +1,9 @@
 #pragma once
 #include "BasicParameters.h"
 #include "Catheter.h"
+#include <iostream>
+#include <cmath>
+
 class PDE // Methods for solving the pde problem
 {
 public:
@@ -30,6 +33,10 @@ private:
 	double c4; // Constant for bladder
 	double c5; // Constant for bladder
 	double c6; // Constant for bladder
+	double c7; // Constant for inside of catheter
+	double c8; // Constant for inside of catheter
+	double c9; // Constant for inside of catheter
+	double c10; // Constant for inside of catheter
 	void step(); // Solve for current time-step
 	void step_c(); // Case for no external contamination (skin_concentration < 0)
 	void step_e(); // Case for external contamination (skin_concentration > 0)
