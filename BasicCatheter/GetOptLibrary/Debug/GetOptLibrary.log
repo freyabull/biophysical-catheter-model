@@ -1,0 +1,27 @@
+﻿  pch.cpp
+  getopt.cpp
+  Importing getopt library
+c:\users\s1875874\source\repos\catheter\basiccatheter\getoptlibrary\getopt.cpp(51): warning C4273: 'optind': inconsistent dll linkage
+  c:\users\s1875874\source\repos\catheter\basiccatheter\getoptlibrary\getopt.h(87): note: see previous definition of 'optind'
+c:\users\s1875874\source\repos\catheter\basiccatheter\getoptlibrary\getopt.cpp(52): warning C4273: 'opterr': inconsistent dll linkage
+  c:\users\s1875874\source\repos\catheter\basiccatheter\getoptlibrary\getopt.h(88): note: see previous definition of 'opterr'
+c:\users\s1875874\source\repos\catheter\basiccatheter\getoptlibrary\getopt.cpp(53): warning C4273: 'optopt': inconsistent dll linkage
+  c:\users\s1875874\source\repos\catheter\basiccatheter\getoptlibrary\getopt.h(89): note: see previous definition of 'optopt'
+c:\users\s1875874\source\repos\catheter\basiccatheter\getoptlibrary\getopt.cpp(75): warning C4273: 'optarg_a': inconsistent dll linkage
+  c:\users\s1875874\source\repos\catheter\basiccatheter\getoptlibrary\getopt.h(99): note: see previous definition of 'optarg_a'
+c:\users\s1875874\source\repos\catheter\basiccatheter\getoptlibrary\getopt.cpp(496): warning C4273: 'getopt_a': inconsistent dll linkage
+  c:\users\s1875874\source\repos\catheter\basiccatheter\getoptlibrary\getopt.h(100): note: see previous definition of 'getopt_a'
+c:\users\s1875874\source\repos\catheter\basiccatheter\getoptlibrary\getopt.cpp(500): warning C4273: 'getopt_long_a': inconsistent dll linkage
+  c:\users\s1875874\source\repos\catheter\basiccatheter\getoptlibrary\getopt.h(101): note: see previous definition of 'getopt_long_a'
+c:\users\s1875874\source\repos\catheter\basiccatheter\getoptlibrary\getopt.cpp(504): warning C4273: 'getopt_long_only_a': inconsistent dll linkage
+  c:\users\s1875874\source\repos\catheter\basiccatheter\getoptlibrary\getopt.h(102): note: see previous definition of 'getopt_long_only_a'
+c:\users\s1875874\source\repos\catheter\basiccatheter\getoptlibrary\getopt.cpp(535): warning C4273: 'optarg_w': inconsistent dll linkage
+  c:\users\s1875874\source\repos\catheter\basiccatheter\getoptlibrary\getopt.h(112): note: see previous definition of 'optarg_w'
+c:\users\s1875874\source\repos\catheter\basiccatheter\getoptlibrary\getopt.cpp(956): warning C4273: 'getopt_w': inconsistent dll linkage
+  c:\users\s1875874\source\repos\catheter\basiccatheter\getoptlibrary\getopt.h(113): note: see previous definition of 'getopt_w'
+c:\users\s1875874\source\repos\catheter\basiccatheter\getoptlibrary\getopt.cpp(960): warning C4273: 'getopt_long_w': inconsistent dll linkage
+  c:\users\s1875874\source\repos\catheter\basiccatheter\getoptlibrary\getopt.h(114): note: see previous definition of 'getopt_long_w'
+c:\users\s1875874\source\repos\catheter\basiccatheter\getoptlibrary\getopt.cpp(964): warning C4273: 'getopt_long_only_w': inconsistent dll linkage
+  c:\users\s1875874\source\repos\catheter\basiccatheter\getoptlibrary\getopt.h(115): note: see previous definition of 'getopt_long_only_w'
+     Creating library C:\Users\s1875874\Source\Repos\catheter\BasicCatheter\Debug\GetOptLibrary.lib and object C:\Users\s1875874\Source\Repos\catheter\BasicCatheter\Debug\GetOptLibrary.exp
+  GetOptLibrary.vcxproj -> C:\Users\s1875874\Source\Repos\catheter\BasicCatheter\Debug\GetOptLibrary.dll

@@ -87,11 +87,11 @@ void PDE::step_e()
 }
 
 void PDE::record()
-{
+{ /*
 	std::cout << "Bottom concentration is " << data->outside[0] << "\n";
 	std::cout << "Top concentration is " << data->outside[x1_len-1] << "\n";
 	std::cout << "Bladder concentration is " << data->bladder << "\n";
-}
+*/}
 
 void PDE::initialize()
 {
