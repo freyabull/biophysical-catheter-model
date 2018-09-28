@@ -3,6 +3,7 @@
 #include "Catheter.h"
 #include <iostream>
 #include <cmath>
+#include <fstream>
 
 class PDE // Methods for solving the pde problem
 {
@@ -18,11 +19,12 @@ public:
 	double dx2; // x step for inside of catheter
 
 	PDE();
-	PDE(BasicParameters* param, Catheter* catheter, double time = 3600,
-		double dt = 0.1, double print_interval = 600);
+	PDE(BasicParameters* param, Catheter* catheter,
+		double time = 3600, double dt = 0.1, double print_interval = 600);
 	~PDE();
 
 	void solve(); // Solve the model for the parameters given
+	void solve(std::ofstream &file); // Solve the model for the parameters given
 
 private:
 	int N; // Number of time steps
@@ -40,7 +42,8 @@ private:
 	void step(); // Solve for current time-step
 	void step_c(); // Case for no external contamination (skin_concentration < 0)
 	void step_e(); // Case for external contamination (skin_concentration > 0)
-	void record(); // Output results for current time-step
+	void record(int current_step); // Output results for current time-step
+	void record(int current_step, std::ofstream &file); // Output results for current time-step to given file
 	void initialize(); // Initialize variables
 };
 
