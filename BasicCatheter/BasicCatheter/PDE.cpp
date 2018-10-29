@@ -149,7 +149,7 @@ void PDE::record(int current_step)
 		std::cout << "Top conc is " << data->outside[x1_len-1] << "\n";
 		std::cout << "Bladder conc is " << data->bladder << "\n";
 		std::cout << "Top inside conc is " << data->inside[0] << "\n";
-		std::cout << "Bottom inside conc is " << data->inside[x2_len-1] << "\n";
+		std::cout << "Bottom inside conc is " << data->inside[x2_len-1] << "\n\n";
 }
 
 void PDE::record(int current_step, std::ofstream &file)
