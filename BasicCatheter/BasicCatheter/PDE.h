@@ -27,6 +27,7 @@ public:
 	void solve(std::ofstream &file); // Solve the model for the parameters given
 
 private:
+	double shell_thickness; // Width of droplet shell in contact
 	int N; // Number of time steps
 	int print_step; // Time-step at which to output results
 	double c1; // Constant for outside of catheter

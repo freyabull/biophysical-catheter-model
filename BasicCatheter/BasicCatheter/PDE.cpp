@@ -105,9 +105,10 @@ void PDE::step()
 
 	// Update c10 to include current concentration
 	double c11 = c10 * data->bladder;
-	// Boundary conditions. No flux conditions at both ends
-	data->inside[0] = c7 * (2.0 * data->old_inside[1]) + data->old_inside[0]
+	// Boundary conditions. Diffusion across from bladder
+	data->inside[0] = c7 * (data->bladder + data->old_inside[1]) + data->old_inside[0]
 		* (c8 - c9 * data->old_inside[0]) + c11 * pow(1.0, 0.5);
+	// No flux conditions at bottom
 	data->inside[x2_len-1] = c7 * (2.0 * data->old_inside[x2_len-2]) 
 		+ data->old_inside[x2_len-1] * (c8 - c9 * data->old_inside[x2_len-1])
 		+ c11 * pow(1.0 / x2_len, 0.5);
@@ -169,6 +170,7 @@ void PDE::record(int current_step, std::ofstream &file)
 
 void PDE::initialize()
 {
+	shell_thickness = 5e-3; // Assume everything within hemispherical shell is in contact
 	x1_len = data->outside.size();
 	x2_len = data->inside.size();
 	N = int(time / dt);
@@ -181,11 +183,12 @@ void PDE::initialize()
 	c3 = param->growth_rate1 * dt / param->carrying_capacity1;
 	c4 = param->diffusivity * dt / (dx1*dx1*param->sump_volume);
 	c4a = param->diffusivity * dt / (dx2*dx2*param->sump_volume);
-	c5 = 1.0 - c4 - c4a - param->growth_rate2 * dt;
+	c5 = 1.0 - c4 - c4a + param->growth_rate2 * dt;
 	c6 = param->growth_rate2 * dt / param->carrying_capacity2;
 	c7 = param->diffusivity *dt / (dx2*dx2);
 	c8 = 1.0 - 2.0 * c7 + param->growth_rate3*dt;
 	c9 = param->growth_rate3 *dt / param->carrying_capacity3;
-	c10 = pow(3.14, 5.0 / 3.0) * pow(0.75*param->droplet_size, 2.0 / 3.0)
-		 * pow(dx2 / (2.0 * 9.81e3), 0.5) * param->stickiness * dt/num_drop;
+	c10 = pow(3.14, 1.0 / 3.0) * pow(0.75*param->droplet_size, 2.0 / 3.0)
+		* pow(dx2 / (2.0 * 9.81e3), 0.5) * param->stickiness * dt / num_drop *
+		shell_thickness;
 }
