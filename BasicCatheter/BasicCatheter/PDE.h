@@ -23,8 +23,10 @@ public:
 		double time = 3600, double dt = 0.1, double print_interval = 600);
 	~PDE();
 
-	void solve(); // Solve the model for the parameters given
-	void solve(std::ofstream &file); // Solve the model for the parameters given
+	// Solve the model for the parameters set. Writes output to console
+	void solve();
+	// Solve the model for the parameters set. Writes output to file
+	void solve(std::ofstream &file); 
 
 private:
 	double shell_thickness; // Width of droplet shell in contact
@@ -41,11 +43,17 @@ private:
 	double c8; // Constant for inside of catheter
 	double c9; // Constant for inside of catheter
 	double c10; // Constant for inside of catheter
-	void step(); // Solve for current time-step
-	void step_c(); // Case for no external contamination (skin_concentration < 0)
-	void step_e(); // Case for external contamination (skin_concentration > 0)
-	void record(int current_step); // Output results for current time-step
-	void record(int current_step, std::ofstream &file); // Output results for current time-step to given file
-	void initialize(); // Initialize variables
+	// Solve for current time-step
+	void step(); 
+	// Case for no external contamination (skin_concentration < 0)
+	void step_c(); 
+	// Case for external contamination (skin_concentration > 0)
+	void step_e(); 
+	// Output results for current time-step to console
+	void record(int current_step); 
+	// Output results for current time-step to given file
+	void record(int current_step, std::ofstream &file); 
+	// Initialize variables
+	void initialize(); 
 };
 

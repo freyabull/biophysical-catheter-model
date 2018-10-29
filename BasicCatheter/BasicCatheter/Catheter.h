@@ -17,6 +17,7 @@ public:
 		     std::vector<double> inside, double skin_concentration = -1.0);
 	~Catheter();
 
+	// Swap the old and new data ready for the next timestep.
 	void update();
 };
 
