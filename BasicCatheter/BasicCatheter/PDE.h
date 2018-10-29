@@ -8,8 +8,8 @@
 class PDE // Methods for solving the pde problem
 {
 public:
-	BasicParameters* param;
-	Catheter* data;
+	BasicParameters* param; // Parameters needed to solve the PDE problem
+	Catheter* data; // Current state of catheter
 	int x1_len; // Number of x steps on outside of catheter
 	int x2_len; // Number of x steps on inside of catheter
 	double time; // Time of total simulation
@@ -29,7 +29,6 @@ public:
 	void solve(std::ofstream &file); 
 
 private:
-	double shell_thickness; // Width of droplet shell in contact
 	int N; // Number of time steps
 	int print_step; // Time-step at which to output results
 	double c1; // Constant for outside of catheter

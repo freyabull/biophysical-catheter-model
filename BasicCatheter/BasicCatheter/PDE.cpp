@@ -170,7 +170,7 @@ void PDE::record(int current_step, std::ofstream &file)
 
 void PDE::initialize()
 {
-	shell_thickness = 5e-3; // Assume everything within hemispherical shell is in contact
+	double shell_thickness = 5e-3; // Width of droplet shell in contact
 	x1_len = data->outside.size();
 	x2_len = data->inside.size();
 	N = int(time / dt);
