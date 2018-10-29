@@ -10,11 +10,13 @@ public:
 	std::vector<double> old_inside; // Concentrations of bacteria on inside of catheter for previous time-step
 	double bladder; // Concentration of bacteria within bladder
 	double skin_concentration; // Concentration of bacteria on the skin, where a negative value = "switched off"
+	double bag_concentration; // Concentration of bacteria in the drainage bag, where a negative value = "switched off"
 
 	Catheter();
-	Catheter(double skin_concentration, int x_len);
+	Catheter(double skin_concentration, double bag_concentration, int x_len);
 	Catheter(std::vector<double> outside, double bladder, 
-		     std::vector<double> inside, double skin_concentration = -1.0);
+		std::vector<double> inside, double skin_concentration = -1.0,
+		double bag_concentration = -1.0);
 	~Catheter();
 
 	// Swap the old and new data ready for the next timestep.

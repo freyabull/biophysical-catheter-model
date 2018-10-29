@@ -42,12 +42,17 @@ private:
 	double c8; // Constant for inside of catheter
 	double c9; // Constant for inside of catheter
 	double c10; // Constant for inside of catheter
+	double c11; // Constant for inside of catheter
 	// Solve for current time-step
 	void step(); 
 	// Case for no external contamination (skin_concentration < 0)
 	void step_c(); 
 	// Case for external contamination (skin_concentration > 0)
 	void step_e(); 
+	// Case for no drainage contamination (bag_concentration < 0)
+	void step_dc();
+	// Case for drainage contamination (bag_concentration > 0)
+	void step_de();
 	// Output results for current time-step to console
 	void record(int current_step); 
 	// Output results for current time-step to given file

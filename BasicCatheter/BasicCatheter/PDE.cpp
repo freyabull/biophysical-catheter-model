@@ -25,32 +25,80 @@ PDE::~PDE()
 void PDE::solve()
 {
 	// Check if there is external contamination from the skin
-	if (data->skin_concentration < 0) 
+	if (data->skin_concentration < 0)
 	{
-		for (int i = 0; i < N; ++i) 
+		// Check if there is external contamination from drainage bag
+		if (data->bag_concentration < 0)
 		{
-			if (i%print_step == 0) 
+			// No contaminants
+			for (int i = 0; i < N; ++i)
 			{
-				record(i);
+				if (i%print_step == 0)
+				{
+					record(i);
+				}
+				// Deal with boundary condition
+				c11 = c10 * data->bladder; // Update c10 to include current concentration
+				step_c();
+				step_dc();
+				// Solve for current timestep
+				step();
 			}
-			// Deal with boundary condition
-			step_c();
-			// Solve for current timestep
-			step();
+	    }
+		else
+		{
+			// Drainage bag contaminates
+			for (int i = 0; i < N; ++i)
+			{
+				if (i%print_step == 0)
+				{
+					record(i);
+				}
+				// Deal with boundary condition
+				c11 = c10 * data->bladder; // Update c10 to include current concentration
+				step_c();
+				step_de();
+				// Solve for current timestep
+				step();
+			}
 		}
 	}
 	else 
 	{
-		for (int i = 0; i < N; ++i) 
+		// Check if there is external contamination from the skin
+		if (data->skin_concentration < 0)
 		{
-			if (i%print_step == 0) 
+			// Skin contamination
+			for (int i = 0; i < N; ++i)
 			{
-				record(i);
+				if (i%print_step == 0)
+				{
+					record(i);
+				}
+				// Deal with boundary condition
+				c11 = c10 * data->bladder; // Update c10 to include current concentration
+				step_e();
+				step_dc();
+				// Solve for current timestep
+				step();
 			}
-			// Deal with boundary condition
-			step_e();
-			// Solve for current timestep
-			step();
+		}
+		else
+		{
+			// Both bag and skin contamination
+			for (int i = 0; i < N; ++i)
+			{
+				if (i%print_step == 0)
+				{
+					record(i);
+				}
+				// Deal with boundary condition
+				c11 = c10 * data->bladder; // Update c10 to include current concentration
+				step_e();
+				step_de();
+				// Solve for current timestep
+				step();
+			}
 		}
 	}
 }
@@ -61,30 +109,78 @@ void PDE::solve(std::ofstream &file)
 	// Check if there is external contamination from the skin
 	if (data->skin_concentration < 0)
 	{
-		for (int i = 0; i < N; ++i)
+		// Check if there is external contamination from drainage bag
+		if (data->bag_concentration < 0)
 		{
-			if (i%print_step == 0)
+			// No contaminants
+			for (int i = 0; i < N; ++i)
 			{
-				record(i,file);
+				if (i%print_step == 0)
+				{
+					record(i, file);
+				}
+				// Deal with boundary condition
+				c11 = c10 * data->bladder; // Update c10 to include current concentration
+				step_c();
+				step_dc();
+				// Solve for current timestep
+				step();
 			}
-			// Deal with boundary condition
-			step_c();
-			// Solve for current timestep
-			step();
+		}
+		else
+		{
+			// Drainage bag contaminates
+			for (int i = 0; i < N; ++i)
+			{
+				if (i%print_step == 0)
+				{
+					record(i, file);
+				}
+				// Deal with boundary condition
+				c11 = c10 * data->bladder; // Update c10 to include current concentration
+				step_c();
+				step_de();
+				// Solve for current timestep
+				step();
+			}
 		}
 	}
 	else
 	{
-		for (int i = 0; i < N; ++i)
+		// Check if there is external contamination from the skin
+		if (data->skin_concentration < 0)
 		{
-			if (i%print_step == 0)
+			// Skin contamination
+			for (int i = 0; i < N; ++i)
 			{
-				record(i,file);
+				if (i%print_step == 0)
+				{
+					record(i, file);
+				}
+				// Deal with boundary condition
+				c11 = c10 * data->bladder; // Update c10 to include current concentration
+				step_e();
+				step_dc();
+				// Solve for current timestep
+				step();
 			}
-			// Deal with boundary condition
-			step_e();
-			// Solve for current timestep
-			step();
+		}
+		else
+		{
+			// Both bag and skin contamination
+			for (int i = 0; i < N; ++i)
+			{
+				if (i%print_step == 0)
+				{
+					record(i, file);
+				}
+				// Deal with boundary condition
+				c11 = c10 * data->bladder; // Update c10 to include current concentration
+				step_e();
+				step_de();
+				// Solve for current timestep
+				step();
+			}
 		}
 	}
 }
@@ -103,15 +199,10 @@ void PDE::step()
 			* (c2 - c3 * data->old_outside[j]);
 	}
 
-	// Update c10 to include current concentration
-	double c11 = c10 * data->bladder;
+	
 	// Boundary conditions. Diffusion across from bladder
 	data->inside[0] = c7 * (data->bladder + data->old_inside[1]) + data->old_inside[0]
 		* (c8 - c9 * data->old_inside[0]) + c11 * pow(1.0, 0.5);
-	// No flux conditions at bottom
-	data->inside[x2_len-1] = c7 * (2.0 * data->old_inside[x2_len-2]) 
-		+ data->old_inside[x2_len-1] * (c8 - c9 * data->old_inside[x2_len-1])
-		+ c11 * pow(1.0 / x2_len, 0.5);
 	// Fisher wave equation with source term for inside of catheter
 	for (int k = 1; k < x2_len-1; ++k) 
 	{
@@ -140,6 +231,22 @@ void PDE::step_e()
 	// External contamination from skin: fixed boundary.
 	data->outside[0] = c1 * (data->old_outside[1] + data->skin_concentration)
 		+ data->old_outside[0] * (c2 - c3 * data->old_outside[0]);
+}
+
+void PDE::step_dc()
+{
+	//  No external contamination boundary condition: no flux.
+	data->inside[x2_len - 1] = c7 * (2.0 * data->old_inside[x2_len - 2])
+		+ data->old_inside[x2_len - 1] * (c8 - c9 * data->old_inside[x2_len - 1])
+		+ c11 * pow(1.0 / x2_len, 0.5);
+}
+
+void PDE::step_de()
+{
+	//  External contamination boundary condition: fixed boundary.
+	data->inside[x2_len - 1] = c7 * (data->old_inside[x2_len - 2] 
+		+ data->bag_concentration) + data->old_inside[x2_len - 1] * (c8 - c9 
+			* data->old_inside[x2_len - 1]) + c11 * pow(1.0 / x2_len, 0.5);
 }
 
 void PDE::record(int current_step)
@@ -191,4 +298,5 @@ void PDE::initialize()
 	c10 = pow(3.14, 1.0 / 3.0) * pow(0.75*param->droplet_size, 2.0 / 3.0)
 		* pow(dx2 / (2.0 * 9.81e3), 0.5) * param->stickiness * dt / num_drop *
 		shell_thickness;
+	c11 = c10 * data->bladder;
 }
