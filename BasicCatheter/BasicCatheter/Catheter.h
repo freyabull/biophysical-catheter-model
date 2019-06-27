@@ -13,7 +13,9 @@ public:
 	double bag_concentration; // Concentration of bacteria in the drainage bag, where a negative value = "switched off"
 
 	Catheter();
+	// Initialize as "clean" catheter
 	Catheter(double skin_concentration, double bag_concentration, int x_len);
+	// Fully initialize catheter according to initial conditions
 	Catheter(std::vector<double> outside, double bladder, 
 		std::vector<double> inside, double skin_concentration = -1.0,
 		double bag_concentration = -1.0);

@@ -10,8 +10,8 @@ Catheter::Catheter()
 }
 
 Catheter::Catheter(double t_skin_conc, double t_bag_conc, int x_len) :
-	outside(x_len, 0), old_outside(x_len, 0), inside(x_len, 0), 
-	old_inside(x_len, 0), bladder(0.0), skin_concentration(t_skin_conc),
+	outside(x_len, 0.0), old_outside(x_len, 0.0), inside(x_len, 0.0), 
+	old_inside(x_len, 0.0), bladder(0.0), skin_concentration(t_skin_conc),
 	bag_concentration(t_bag_conc)
 {
 }
