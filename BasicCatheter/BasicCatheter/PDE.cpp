@@ -202,13 +202,13 @@ void PDE::step()
 	
 	// Boundary conditions. Diffusion across from bladder
 	data->inside[0] = c7 * (data->bladder + data->old_inside[1]) + data->old_inside[0]
-		* (c8 - c9 * data->old_inside[0]) + c11 * pow(1.0, 0.5);
+		* (c8 - c9 * data->old_inside[0]) + c11;
 	// Fisher wave equation with source term for inside of catheter
 	for (int k = 1; k < x2_len-1; ++k) 
 	{
 		data->inside[k] = c7 * (data->old_inside[k + 1]
 			+ data->old_inside[k - 1]) + data->old_inside[k] * (c8 - c9
-				* data->old_inside[k]) + c11 * 1.0/pow(double(k)+1.0, 0.5);
+				* data->old_inside[k]) + c11;
 	}
 
 	// Bladder is a well-mixed volume with diffusion to catheter
@@ -238,7 +238,7 @@ void PDE::step_dc()
 	//  No external contamination boundary condition: no flux.
 	data->inside[x2_len - 1] = c7 * (2.0 * data->old_inside[x2_len - 2])
 		+ data->old_inside[x2_len - 1] * (c8 - c9 * data->old_inside[x2_len - 1])
-		+ c11 * pow(1.0 / x2_len, 0.5);
+		+ c11;
 }
 
 void PDE::step_de()
@@ -246,7 +246,7 @@ void PDE::step_de()
 	//  External contamination boundary condition: fixed boundary.
 	data->inside[x2_len - 1] = c7 * (data->old_inside[x2_len - 2] 
 		+ data->bag_concentration) + data->old_inside[x2_len - 1] * (c8 - c9 
-			* data->old_inside[x2_len - 1]) + c11 * pow(1.0 / x2_len, 0.5);
+			* data->old_inside[x2_len - 1]) + c11;
 }
 
 void PDE::record(int current_step)
@@ -277,14 +277,13 @@ void PDE::record(int current_step, std::ofstream &file)
 
 void PDE::initialize()
 {
-	double shell_thickness = 5e-3; // Width of droplet shell in contact
+	double shell_thickness = 5e-3; // Width of contact area
 	x1_len = data->outside.size();
 	x2_len = data->inside.size();
 	N = int(time / dt);
 	print_step = int(print_interval / dt);
 	dx1 = param->catheter_length / x1_len;
 	dx2 = param->catheter_length / x2_len;
-	double num_drop = 60.0 * param->droplet_size / param->urine_rate; // Number of droplets per second
 	c1 = param->diffusivity * dt / (dx1*dx1);
 	c2 = 1.0 - 2.0 * c1 + param->growth_rate1 * dt;
 	c3 = param->growth_rate1 * dt / param->carrying_capacity1;
@@ -295,8 +294,6 @@ void PDE::initialize()
 	c7 = param->diffusivity *dt / (dx2*dx2);
 	c8 = 1.0 - 2.0 * c7 + param->growth_rate3*dt;
 	c9 = param->growth_rate3 *dt / param->carrying_capacity3;
-	c10 = pow(3.14, 1.0 / 3.0) * pow(0.75*param->droplet_size, 2.0 / 3.0)
-		* pow(dx2 / (2.0 * 9.81e3), 0.5) * param->stickiness * dt / num_drop *
-		shell_thickness;
+	c10 = param->stickiness * 2 * 3.14 * shell_thickness * param->catheter_radius;
 	c11 = c10 * data->bladder;
 }

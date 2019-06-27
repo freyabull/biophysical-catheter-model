@@ -10,7 +10,7 @@ public:
 	double growth_rate3; // Growth rate on outside of catheter
 	double carrying_capacity3; // Carrying capacity on inside of catheter
 	double urine_rate; // Rate of production of urine
-	double droplet_size; // Size of a single droplet of urine
+	double catheter_radius; // Internal radius of catheter
 	double stickiness; // Probability of a bacterium sticking to wall if it comes in contact
 	double sump_volume; // Volume of residual urine
 	double catheter_length; // Length of the catheter
@@ -20,7 +20,7 @@ public:
 		double carrying_capacity1, double growth_rate2,
 		double carrying_capacity2, double growth_rate3,
 		double carrying_capacity3, double urine_rate,
-		double droplet_size, double stickiness, double sump_volume,
+		double catheter_radius, double stickiness, double sump_volume,
 		double catheter_length);
 	~BasicParameters();
 };
