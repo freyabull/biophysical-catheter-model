@@ -294,6 +294,6 @@ void PDE::initialize()
 	c7 = param->diffusivity *dt / (dx2*dx2);
 	c8 = 1.0 - 2.0 * c7 + param->growth_rate3*dt;
 	c9 = param->growth_rate3 *dt / param->carrying_capacity3;
-	c10 = param->stickiness * 2 * 3.14 * shell_thickness * param->catheter_radius;
+	c10 = param->stickiness * 2 * 3.14 * shell_thickness * param->catheter_radius * dt;
 	c11 = c10 * data->bladder;
 }
