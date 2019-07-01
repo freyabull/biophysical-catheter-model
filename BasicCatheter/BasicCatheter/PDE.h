@@ -35,7 +35,6 @@ private:
 	double c2; // Constant for outside of catheter
 	double c3; // Constant for outside of catheter
 	double c4; // Constant for bladder
-	double c4a; // Constant for bladder
 	double c5; // Constant for bladder
 	double c6; // Constant for bladder
 	double c7; // Constant for inside of catheter

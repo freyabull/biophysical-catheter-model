@@ -212,8 +212,8 @@ void PDE::step()
 	}
 
 	// Bladder is a well-mixed volume with diffusion to catheter
-	data->bladder = c4 * data->old_outside[x1_len - 1] + c4a * 
-		data->old_inside[0] + data->bladder * (c5 - c6 * data->bladder);
+	data->bladder = c4 * (data->old_outside[x1_len - 1] +  
+		data->old_inside[0]) + data->bladder * (c5 - c6 * data->bladder);
 
 	// Update old data
 	data->update();
@@ -287,9 +287,8 @@ void PDE::initialize()
 	c1 = param->diffusivity * dt / (dx1*dx1);
 	c2 = 1.0 - 2.0 * c1 + param->growth_rate1 * dt;
 	c3 = param->growth_rate1 * dt / param->carrying_capacity1;
-	c4 = param->diffusivity * dt / (dx1*dx1*param->sump_volume);
-	c4a = param->diffusivity * dt / (dx2*dx2*param->sump_volume);
-	c5 = 1.0 - c4 - c4a + param->growth_rate2 * dt;
+	c4 = param->diffusivity * dt / (param->sump_volume);
+	c5 = 1.0 + param->growth_rate2 * dt;
 	c6 = param->growth_rate2 * dt / param->carrying_capacity2;
 	c7 = param->diffusivity *dt / (dx2*dx2);
 	c8 = 1.0 - 2.0 * c7 + param->growth_rate3*dt;
