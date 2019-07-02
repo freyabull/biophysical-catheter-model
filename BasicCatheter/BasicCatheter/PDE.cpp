@@ -251,25 +251,25 @@ void PDE::step_de()
 
 void PDE::record(int current_step)
 { 
-		std::cout << "Time is " << current_step * dt / 3600 << "hrs \n";
-		std::cout << "Bottom conc is " << data->outside[0] << "\n";
-		std::cout << "Top conc is " << data->outside[x1_len-1] << "\n";
-		std::cout << "Bladder conc is " << data->bladder << "\n";
-		std::cout << "Top inside conc is " << data->inside[0] << "\n";
-		std::cout << "Bottom inside conc is " << data->inside[x2_len-1] << "\n\n";
+	std::cout << "Time is " << double(current_step) * dt / 3600.0 << "hrs \n";
+	std::cout << "Bottom conc is " << data->outside[0] << "\n";
+	std::cout << "Top conc is " << data->outside[x1_len-1] << "\n";
+	std::cout << "Bladder conc is " << data->bladder << "\n";
+	std::cout << "Top inside conc is " << data->inside[0] << "\n";
+	std::cout << "Bottom inside conc is " << data->inside[x2_len-1] << "\n\n";
 }
 
 void PDE::record(int current_step, std::ofstream &file)
 {
-	file << "\n Time is " << current_step * dt / 3600 << "hrs \n";
-	file << "Outside of catheter starting at base. \n";
+	double out_time = double(current_step) * dt / 3600.0;
+	file << "o" << out_time << ",";
 	for (int i = 0; i < x1_len; ++i) {
 		file << data->outside[i] << ",";
 	}
-	file << "\n Bladder \n";
+	file << "\nb" << out_time << ",";
 	file << data->bladder << "\n";
-	file << "Inside of catheter starting at top. \n";
-	for (int i = 0; i < x1_len; ++i) {
+	file << "i" << out_time << ",";
+	for (int i = 0; i < x2_len; ++i) {
 		file << data->inside[i] << ",";
 	}
 	file << "\n";
