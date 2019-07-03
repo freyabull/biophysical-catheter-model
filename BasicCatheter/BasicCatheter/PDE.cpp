@@ -262,15 +262,15 @@ void PDE::record(int current_step)
 void PDE::record(int current_step, std::ofstream &file)
 {
 	double out_time = double(current_step) * dt / 3600.0;
-	file << "o" << out_time << ",";
+	file << "o" << out_time;
 	for (int i = 0; i < x1_len; ++i) {
-		file << data->outside[i] << ",";
+		file << "," << data->outside[i];
 	}
-	file << "\nb" << out_time << ",";
-	file << data->bladder << "\n";
-	file << "i" << out_time << ",";
+	file << "\nb" << out_time;
+	file << "," << data->bladder << "\n";
+	file << "i" << out_time ;
 	for (int i = 0; i < x2_len; ++i) {
-		file << data->inside[i] << ",";
+		file << "," << data->inside[i];
 	}
 	file << "\n";
 }
