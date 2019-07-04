@@ -6,8 +6,10 @@ import pandas as pd
 
 plt.rc('text', usetex=True) # Enable latex
 
-df = pd.read_csv('../BasicCatheter/results.csv', index_col=0, header=None)
+df = pd.read_csv('../BasicCatheter/results.csv', index_col=0, header=None, skiprows=3)
+info = pd.read_csv('../BasicCatheter/results.csv',  nrows=1)
 print(df)
+print(info)
 
 # Extract bladder time series
 time = np.array(range(0, 24))
@@ -69,4 +71,4 @@ axiw.set_xlabel('Time (hrs)')
 axiw.set_ylabel('\% Distance down catheter')
 axiw.set_title('Location of peak concentration, inside')
 
-plt.show()
+#plt.show()
