@@ -278,10 +278,10 @@ void PDE::record(int current_step, std::ofstream &file)
 void PDE::initialize()
 {
 	double shell_thickness = 5e-3; // Width of contact area
-	x_len = data->outside.size();
+	x_len = data->x_len;
 	N = int(time / dt);
 	print_step = int(print_interval / dt);
-	dx = param->catheter_length / x_len;
+	dx = param->catheter_length / (x_len-1);
 	c1 = param->diffusivity * dt / (dx*dx);
 	c2 = 1.0 - 2.0 * c1 + param->growth_rate1 * dt;
 	c3 = param->growth_rate1 * dt / param->carrying_capacity1;

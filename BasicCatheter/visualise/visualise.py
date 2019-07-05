@@ -18,7 +18,7 @@ time = dt*np.array(range(0, t_len))
 
 # Extract x series
 x_len = int(info['num of x steps'])
-dx = float(info['catheter length']/x_len)
+dx = float(info['catheter length']/(x_len-1))
 x = dx*np.array(range(0,x_len))
 
 # Extract bladder time series

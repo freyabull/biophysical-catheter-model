@@ -11,6 +11,7 @@ public:
 	double bladder; // Concentration of bacteria within bladder
 	double skin_concentration; // Concentration of bacteria on the skin, where a negative value = "switched off"
 	double bag_concentration; // Concentration of bacteria in the drainage bag, where a negative value = "switched off"
+	int x_len; // Number of x points
 
 	Catheter();
 	// Initialize as "clean" catheter

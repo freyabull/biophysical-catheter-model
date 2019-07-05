@@ -12,7 +12,7 @@ Catheter::Catheter()
 Catheter::Catheter(double t_skin_conc, double t_bag_conc, int x_len) :
 	outside(x_len, 0.0), old_outside(x_len, 0.0), inside(x_len, 0.0), 
 	old_inside(x_len, 0.0), bladder(0.0), skin_concentration(t_skin_conc),
-	bag_concentration(t_bag_conc)
+	bag_concentration(t_bag_conc), x_len(x_len)
 {
 }
 
@@ -21,7 +21,7 @@ Catheter::Catheter(std::vector<double> t_outside, double t_bladder,
 	               double t_bag_conc) :
 	outside(t_outside), old_outside(t_outside), bladder(t_bladder), 
 	inside(t_inside), old_inside(t_inside), skin_concentration(t_skin_conc),
-	bag_concentration(t_bag_conc)
+	bag_concentration(t_bag_conc), x_len(t_outside.size())
 {
 }
 
