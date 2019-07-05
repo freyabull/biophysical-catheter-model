@@ -10,13 +10,11 @@ class PDE // Methods for solving the pde problem
 public:
 	BasicParameters* param; // Parameters needed to solve the PDE problem
 	Catheter* data; // Current state of catheter
-	int x1_len; // Number of x steps on outside of catheter
-	int x2_len; // Number of x steps on inside of catheter
+	int x_len; // Number of x steps 
 	double time; // Time of total simulation
 	double dt; // Time-step
 	double print_interval; // Time interval at which to record data
-	double dx1; // x step for outside of catheter
-	double dx2; // x step for inside of catheter
+	double dx; // x step
 
 	PDE();
 	PDE(BasicParameters* param, Catheter* catheter,
