@@ -38,21 +38,27 @@ for i in range(0,t_len):
 
 # Find outside peaks
 peak_outside = np.argmax(outside, axis=1)
-po_min = np.zeros(t_len)
-po_max = np.zeros(t_len)
+po_min = np.empty(t_len)
+po_max = np.empty(t_len)
+po_min[:] = np.nan
+po_max[:] = np.nan
 for i in range(1,t_len):
     po_range = np.nonzero(outside[i]>=(outside[i][int(peak_outside[i])]*0.99))
-    po_min[i] = po_range[0][0]
-    po_max[i] = po_range[0][-1]
+    if len(po_range[0]):
+        po_min[i] = po_range[0][0]
+        po_max[i] = po_range[0][-1]
 
 # Find inside peaks
 peak_inside = np.argmax(inside, axis=1)
-pi_min = np.zeros(t_len)
-pi_max = np.zeros(t_len)
+pi_min = np.empty(t_len)
+pi_max = np.empty(t_len)
+pi_min[:] = np.nan
+pi_max[:] = np.nan
 for i in range(1,t_len):
     pi_range = np.nonzero(inside[i]>=(inside[i][int(peak_inside[i])]*0.99))
-    pi_min[i] = pi_range[0][0]
-    pi_max[i] = pi_range[0][-1]
+    if len(pi_range[0]):
+        pi_min[i] = pi_range[0][0]
+        pi_max[i] = pi_range[0][-1]
 
 # Find wavefronts outside
 ofront1l = np.empty(t_len)

@@ -24,12 +24,14 @@ PDE::~PDE()
 
 void PDE::solve()
 {
+	std::cout << "Skin concentration is: " << data->skin_concentration << "and bag concentration is: " << data->bag_concentration << std::endl;
 	// Check if there is external contamination from the skin
 	if (data->skin_concentration < 0)
 	{
 		// Check if there is external contamination from drainage bag
 		if (data->bag_concentration < 0)
 		{
+			std::cout << "No contaminants" << std::endl;
 			// No contaminants
 			for (int i = 0; i < N; ++i)
 			{
@@ -47,6 +49,7 @@ void PDE::solve()
 	    }
 		else
 		{
+			std::cout << "Only drainage bag contaminates" << std::endl;
 			// Drainage bag contaminates
 			for (int i = 0; i < N; ++i)
 			{
@@ -65,9 +68,10 @@ void PDE::solve()
 	}
 	else 
 	{
-		// Check if there is external contamination from the skin
-		if (data->skin_concentration < 0)
+		// Check if there is external contamination from the drainage bag
+		if (data->bag_concentration < 0)
 		{
+			std::cout << "Only skin contaminates" << std::endl;
 			// Skin contamination
 			for (int i = 0; i < N; ++i)
 			{
@@ -85,6 +89,7 @@ void PDE::solve()
 		}
 		else
 		{
+			std::cout << "Both skin and drainage contaminates" << std::endl;
 			// Both bag and skin contamination
 			for (int i = 0; i < N; ++i)
 			{
@@ -147,8 +152,8 @@ void PDE::solve(std::ofstream &file)
 	}
 	else
 	{
-		// Check if there is external contamination from the skin
-		if (data->skin_concentration < 0)
+		// Check if there is external contamination from the drainage bag
+		if (data->bag_concentration < 0)
 		{
 			// Skin contamination
 			for (int i = 0; i < N; ++i)
