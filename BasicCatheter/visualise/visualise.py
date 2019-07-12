@@ -3,6 +3,8 @@
 import matplotlib.pyplot as plt 
 import numpy as np
 import pandas as pd
+import seaborn as sns
+from textwrap import wrap
 
 plt.rc('text', usetex=True) # Enable latex
 
@@ -10,6 +12,9 @@ df = pd.read_csv('../BasicCatheter/results.csv', index_col=0, header=None, skipr
 info = pd.read_csv('../BasicCatheter/results.csv',  nrows=1)
 print(df)
 print(info)
+
+# Find reasonable minimum bladder concentration
+min_bladder = float(1.0/(1000.0*info['sump volume']))
 
 # Extract time series
 t_len = int(info['simulation length']/info['print step']) # number of time steps
@@ -38,6 +43,8 @@ for i in range(0,t_len):
 
 # Find outside peaks
 peak_outside = np.argmax(outside, axis=1)
+opeaks = np.array([outside[i][peak_outside[i]] for i in range(1,t_len)])
+otimes = np.unique([np.argmax(opeaks>opeaks[-1]*0.2*i) for i in range(1,5)])
 po_min = np.empty(t_len)
 po_max = np.empty(t_len)
 po_min[:] = np.nan
@@ -50,6 +57,9 @@ for i in range(1,t_len):
 
 # Find inside peaks
 peak_inside = np.argmax(inside, axis=1)
+ipeaks = np.array([inside[i][peak_inside[i]] for i in range(1,t_len)])
+itimes = np.unique([np.argmax(ipeaks>ipeaks[-1]*0.2*i) for i in range(1,5)])
+istimes = np.unique([np.argmax(ipeaks>(20*i)) for i in range(1,5)])
 pi_min = np.empty(t_len)
 pi_max = np.empty(t_len)
 pi_min[:] = np.nan
@@ -61,144 +71,103 @@ for i in range(1,t_len):
         pi_max[i] = pi_range[0][-1]
 
 # Find wavefronts outside
-ofront1l = np.empty(t_len)
-ofront1u = np.empty(t_len)
-ofront2l = np.empty(t_len)
-ofront2u = np.empty(t_len)
-ofront3l = np.empty(t_len)
-ofront3u = np.empty(t_len)
-ofront4l = np.empty(t_len)
-ofront4u = np.empty(t_len)
-ofront5l = np.empty(t_len)
-ofront5u = np.empty(t_len)
-ofront0l = np.empty(t_len)
-ofront0u = np.empty(t_len)
-ofront1l[:]= np.nan
-ofront1u[:]= np.nan
-ofront2l[:]= np.nan
-ofront2u[:]= np.nan
-ofront3l[:]= np.nan
-ofront3u[:]= np.nan
-ofront4l[:]= np.nan
-ofront4u[:]= np.nan
-ofront5l[:]= np.nan
-ofront5u[:]= np.nan
-ofront0l[:]= np.nan
-ofront0u[:]= np.nan
+ofrontl = np.empty([6,t_len])
+ofrontu = np.empty([6,t_len])
+ofrontl[:][:] = np.nan
+ofrontu[:][:] = np.nan
 for i in range(1,t_len):
-    ofront1 = np.nonzero(outside[i]>10e1)
-    if len(ofront1[0]):
-        ofront1l[i] = ofront1[0][0]
-        ofront1u[i] = ofront1[0][-1]
-    ofront2 = np.nonzero(outside[i]>10e2)
-    if len(ofront2[0]):
-        ofront2l[i] = ofront2[0][0]
-        ofront2u[i] = ofront2[0][-1]
-    ofront3 = np.nonzero(outside[i]>10e3)
-    if len(ofront3[0]):
-        ofront3l[i] = ofront3[0][0]
-        ofront3u[i] = ofront3[0][-1]
-    ofront4 = np.nonzero(outside[i]>10e4)
-    if len(ofront4[0]):
-        ofront4l[i] = ofront4[0][0]
-        ofront4u[i] = ofront4[0][-1]
-    ofront5 = np.nonzero(outside[i]>10e5)
-    if len(ofront5[0]):
-        ofront5l[i] = ofront5[0][0]
-        ofront5u[i] = ofront5[0][-1]
-    ofront0 = np.nonzero(outside[i]>10e0)
+    ofront0 = np.nonzero(outside[i]>=10e0)
     if len(ofront0[0]):
-        ofront0l[i] = ofront0[0][0]
-        ofront0u[i] = ofront0[0][-1]
+        ofrontl[0][i] = ofront0[0][0]
+        ofrontu[0][i] = ofront0[0][-1]
+    ofront1 = np.nonzero(outside[i]>=10e1)
+    if len(ofront1[0]):
+        ofrontl[1][i] = ofront1[0][0]
+        ofrontu[1][i] = ofront1[0][-1]
+    ofront2 = np.nonzero(outside[i]>=10e2)
+    if len(ofront2[0]):
+        ofrontl[2][i] = ofront2[0][0]
+        ofrontu[2][i] = ofront2[0][-1]
+    ofront3 = np.nonzero(outside[i]>=10e3)
+    if len(ofront3[0]):
+        ofrontl[3][i] = ofront3[0][0]
+        ofrontu[3][i] = ofront3[0][-1]
+    ofront4 = np.nonzero(outside[i]>=10e4)
+    if len(ofront4[0]):
+        ofrontl[4][i] = ofront4[0][0]
+        ofrontu[4][i] = ofront4[0][-1]
+    ofront5 = np.nonzero(outside[i]>=10e5)
+    if len(ofront5[0]):
+        ofrontl[5][i] = ofront5[0][0]
+        ofrontu[5][i] = ofront5[0][-1]
 
 # Find wavefronts inside
-ifront1l = np.empty(t_len)
-ifront1u = np.empty(t_len)
-ifront2l = np.empty(t_len)
-ifront2u = np.empty(t_len)
-ifront3l = np.empty(t_len)
-ifront3u = np.empty(t_len)
-ifront4l = np.empty(t_len)
-ifront4u = np.empty(t_len)
-ifront5l = np.empty(t_len)
-ifront5u = np.empty(t_len)
-ifront0l = np.empty(t_len)
-ifront0u = np.empty(t_len)
-ifront1l[:]= np.nan
-ifront1u[:]= np.nan
-ifront2l[:]= np.nan
-ifront2u[:]= np.nan
-ifront3l[:]= np.nan
-ifront3u[:]= np.nan
-ifront4l[:]= np.nan
-ifront4u[:]= np.nan
-ifront5l[:]= np.nan
-ifront5u[:]= np.nan
-ifront0l[:]= np.nan
-ifront0u[:]= np.nan
+ifrontl = np.empty([6,t_len])
+ifrontu = np.empty([6,t_len])
+ifrontl[:][:] = np.nan
+ifrontu[:][:] = np.nan
 for i in range(1,t_len):
-    ifront1 = np.nonzero(inside[i]>10e1)
-    if len(ifront1[0]):
-        ifront1l[i] = ifront1[0][0]
-        ifront1u[i] = ifront1[0][-1]
-    ifront2 = np.nonzero(inside[i]>10e2)
-    if len(ifront2[0]):
-        ifront2l[i] = ifront2[0][0]
-        ifront2u[i] = ifront2[0][-1]
-    ifront3 = np.nonzero(inside[i]>10e3)
-    if len(ifront3[0]):
-        ifront3l[i] = ifront3[0][0]
-        ifront3u[i] = ifront3[0][-1]
-    ifront4 = np.nonzero(inside[i]>10e4)
-    if len(ifront4[0]):
-        ifront4l[i] = ifront4[0][0]
-        ifront4u[i] = ifront4[0][-1]
-    ifront5 = np.nonzero(inside[i]>10e5)
-    if len(ifront5[0]):
-        ifront5l[i] = ifront5[0][0]
-        ifront5u[i] = ifront5[0][-1]
-    ifront0 = np.nonzero(inside[i]>10e0)
+    ifront0 = np.nonzero(inside[i]>=10e0)
     if len(ifront0[0]):
-        ifront0l[i] = ifront0[0][0]
-        ifront0u[i] = ifront0[0][-1]
+        ifrontl[0][i] = ifront0[0][0]
+        ifrontu[0][i] = ifront0[0][-1]
+    ifront1 = np.nonzero(inside[i]>=10e1)
+    if len(ifront1[0]):
+        ifrontl[1][i] = ifront1[0][0]
+        ifrontu[1][i] = ifront1[0][-1]
+    ifront2 = np.nonzero(inside[i]>=10e2)
+    if len(ifront2[0]):
+        ifrontl[2][i] = ifront2[0][0]
+        ifrontu[2][i] = ifront2[0][-1]
+    ifront3 = np.nonzero(inside[i]>=10e3)
+    if len(ifront3[0]):
+        ifrontl[3][i] = ifront3[0][0]
+        ifrontu[3][i] = ifront3[0][-1]
+    ifront4 = np.nonzero(inside[i]>=10e4)
+    if len(ifront4[0]):
+        ifrontl[4][i] = ifront4[0][0]
+        ifrontu[4][i] = ifront4[0][-1]
+    ifront5 = np.nonzero(inside[i]>=10e5)
+    if len(ifront5[0]):
+        ifrontl[5][i] = ifront5[0][0]
+        ifrontu[5][i] = ifront5[0][-1]
 
-
+sns.set_palette(sns.dark_palette("sky blue", n_colors=8, input="xkcd", reverse=True))
 fig, ((axb, axo, axi, ax), (axow, axiw, axwo, axwi)) = plt.subplots(2,4)
+fig.suptitle('\n'.join(wrap('Model parameters: {}'.format([(i,info[i][0]) for i in info]),300)), fontsize=10)
 
 # Plot bladder concentration against time
-axb.plot(time[6:], bladder[6:])
+bladder = bladder*(bladder>min_bladder) # Remove unphysical small values
+axb.plot(time, bladder)
 axb.xaxis.set_major_locator(plt.MultipleLocator(12))
 axb.set_yscale('log')
-#axb.ticklabel_format(axis='y', style='sci', scilimits=(0,0))
 axb.set_xlabel('Time (hrs)')
 axb.set_ylabel('Bacterial concentration (mm$^{-3}$)')
 axb.set_title('Bladder')
 
 # Plot wave profile outside
-axo.plot(x,outside[16])
-axo.plot(x,outside[18])
-axo.plot(x,outside[20])
-axo.plot(x,outside[24])
-axo.plot(x,outside[47])
+for i in otimes:
+    axo.plot(x,outside[i], label='$t = {}$ hrs'.format(time[i]))
+axo.plot(x,outside[-1], label='$t = {}$ hrs'.format(time[-1]))
 axo.ticklabel_format(axis='y', style='sci', scilimits=(0,0))
 axo.set_xlabel('Distance from catheter base (mm)')
 axo.set_ylabel('Bacterial concentration (mm$^{-2}$)')
 axo.set_title('Outside')
+axo.legend(loc='upper right')
 
 # Plot wave profile inside
-axi.plot(x,inside[22])
-axi.plot(x,inside[24])
-axi.plot(x,inside[26])
-axi.plot(x,inside[28])
-axi.plot(x,inside[47])
+for i in itimes:
+    axi.plot(x,inside[i], label='$t = {}$ hrs'.format(time[i]))
+axi.plot(x,inside[-1],label='$t = {}$ hrs'.format(time[-1]))
 axi.ticklabel_format(axis='y', style='sci', scilimits=(0,0))
 axi.set_xlabel('Distance from catheter tip (mm)')
 axi.set_ylabel('Bacterial concentration (mm$^{-2}$)')
-axi.set_title('Inside large time')
+axi.set_title('Inside late time')
+axi.legend(loc='upper right')
 
 #Plot wavepeak outside
 axow.plot(time[1:], peak_outside[1:]*dx)
-axow.fill_between(time, po_min*dx, po_max*dx, alpha=0.5)
+axow.fill_between(time, po_min*dx, po_max*dx, alpha=0.2)
 axow.xaxis.set_major_locator(plt.MultipleLocator(12))
 axow.set_xlabel('Time (hrs)')
 axow.set_ylabel('Distance from catheter base (mm)')
@@ -206,45 +175,40 @@ axow.set_title('Position of extraluminal peak concentration')
 
 #Plot wavepeak inside
 axiw.plot(time[1:], peak_inside[1:]*dx)
-axiw.fill_between(time, pi_min*dx, pi_max*dx, alpha=0.5)
+axiw.fill_between(time, pi_min*dx, pi_max*dx, alpha=0.2)
 axiw.xaxis.set_major_locator(plt.MultipleLocator(12))
 axiw.set_xlabel('Time (hrs)')
 axiw.set_ylabel('Distance from catheter tip (mm)')
 axiw.set_title('Position of intraluminal peak concentration')
 
 #Plot inside small time
-ax.plot(x,inside[7])
-ax.plot(x,inside[9])
-ax.plot(x,inside[11])
-ax.plot(x,inside[13])
-ax.plot(x,inside[15])
+for i in istimes:
+    ax.plot(x,inside[i], label='$t = {}$ hrs'.format(time[i]))
 ax.ticklabel_format(axis='y', style='sci', scilimits=(0,0))
 ax.set_xlabel('Distance from catheter tip (mm)')
 ax.set_ylabel('Bacterial concentration (mm$^{-2}$)')
-ax.set_title('Inside small time')
+ax.set_title('Inside early time')
+ax.legend(loc='upper right')
 
 #Plot wavefront outside
-axwo.fill_between(time, ofront1l*dx, ofront1u*dx, alpha=0.2, color='b', label='10e1')
-axwo.fill_between(time, ofront2l*dx, ofront2u*dx, alpha=0.2, color='b', label='10e2')
-axwo.fill_between(time, ofront3l*dx, ofront3u*dx, alpha=0.2, color='b', label='10e3')
-axwo.fill_between(time, ofront4l*dx, ofront4u*dx, alpha=0.2, color='b', label='10e4')
-axwo.fill_between(time, ofront5l*dx, ofront5u*dx, alpha=0.2, color='b', label='10e5')
-axwo.fill_between(time, ofront0l*dx, ofront0u*dx, alpha=0.2, color='b', label='10e0')
+for i in range(6):
+    axwo.fill_between(time, ofrontl[i]*dx, ofrontu[i]*dx, label='$n = 10^{}$ mm$^{{-2}}$'.format(i))
 axwo.xaxis.set_major_locator(plt.MultipleLocator(12))
 axwo.set_xlabel('Time (hrs)')
 axwo.set_ylabel('Distance from catheter base (mm)')
 axwo.set_title('Wavefront outside')
+axwo.legend(loc='upper right')
+
+
 
 #Plot wavefront inside
-axwi.fill_between(time, ifront1l*dx, ifront1u*dx, alpha=0.2, color='b', label='10e1')
-axwi.fill_between(time, ifront2l*dx, ifront2u*dx, alpha=0.2, color='b', label='10e2')
-axwi.fill_between(time, ifront3l*dx, ifront3u*dx, alpha=0.2, color='b', label='10e3')
-axwi.fill_between(time, ifront4l*dx, ifront4u*dx, alpha=0.2, color='b', label='10e4')
-axwi.fill_between(time, ifront5l*dx, ifront5u*dx, alpha=0.2, color='b', label='10e5')
-axwi.fill_between(time, ifront0l*dx, ifront0u*dx, alpha=0.2, color='b', label='10e0')
+for i in range(6):
+    axwi.fill_between(time, ifrontl[i]*dx, ifrontu[i]*dx, label='$n = 10^{}$ mm$^{{-2}}$'.format(i))
 axwi.xaxis.set_major_locator(plt.MultipleLocator(12))
 axwi.set_xlabel('Time (hrs)')
 axwi.set_ylabel('Distance from catheter tip (mm)')
 axwi.set_title('Wavefront inside')
+axwi.legend(loc='upper right')
+
 
 plt.show()
