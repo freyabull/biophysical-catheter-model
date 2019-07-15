@@ -6,19 +6,22 @@ import pandas as pd
 import seaborn as sns
 from textwrap import wrap
 
+# Location of data file
+file = '../BasicCatheter/results.csv'
+
 
 # Read data into pandas dataframe
-df = pd.read_csv('../BasicCatheter/results.csv', index_col=0, header=None, skiprows=3)
-info = pd.read_csv('../BasicCatheter/results.csv',  nrows=1)
+df = pd.read_csv(file, index_col=0, header=None, skiprows=3)
+info = pd.read_csv(file,  nrows=1)
 
 
 #Extract data series from dataframe
 t_len = int(info['simulation length']/info['print step']) # number of time steps
-dt = float(info['print step']/3600) # print interval
+dt = float(info['print step']/3600) # print interval (hrs)
 time = dt*np.array(range(0, t_len)) # time series
 
 x_len = int(info['num of x steps']) # number of x steps
-dx = float(info['catheter length']/(x_len-1)) # x step interval
+dx = float(info['catheter length']/(x_len-1)) # x step interval (mm)
 x = dx*np.array(range(0,x_len)) # x series
 
 outside = np.zeros((t_len,df.shape[1]))
