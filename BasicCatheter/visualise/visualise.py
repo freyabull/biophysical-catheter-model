@@ -46,11 +46,23 @@ ipeaks = np.array([inside[i][peak_inside[i]] for i in range(1,t_len)])
 # Set up figure/environment
 plt.rc('text', usetex=True) # Enable latex
 sns.set_palette(sns.dark_palette("sky blue", n_colors=8, input="xkcd", reverse=True)) # Set colour palette
-fig, ((ax_bt, ax_op, ax_ipe, ax_ipl), (ax_ow, ax_iw, ax_owf, ax_iwf)) = plt.subplots(2,4) # Create figure with subplots
+fig, ((ax_op, ax_bt, ax_ipe, ax_ipl), (ax_ow, ax_iw, ax_owf, ax_iwf)) = plt.subplots(2,4) # Create figure with subplots
 fig.suptitle('\n'.join(wrap('Model parameters: {}'.format([(i,info[i][0]) for i in info]),300)), fontsize=10) # Add model parameters to figure
 
 
 # Figure 1
+# Superposition of extraluminal wave profiles
+otimes = np.unique([np.argmax(opeaks>=opeaks[-1]*0.2*i) for i in range(1,5)]) # Find interesting times to plot: peak concentration = (0.2,0.4,0.6,0.8)*max
+for i in otimes: ax_op.plot(x,outside[i], label='$t = {}$ hrs'.format(time[i])) # Plot wave profile for times found above
+ax_op.plot(x,outside[-1], label='$t = {}$ hrs'.format(time[-1])) # Plot wave profile for final time (ie peak concentration = max)
+ax_op.ticklabel_format(axis='y', style='sci', scilimits=(0,0)) # Axis labels for concentration in standard form
+ax_op.set_xlabel('Distance from catheter base (mm)')
+ax_op.set_ylabel('Bacterial concentration (mm$^{-2}$)')
+ax_op.set_title('Extraluminal wave profiles')
+ax_op.legend(loc='upper right')
+
+
+# Figure 2
 # Bladder concentration against time
 min_bladder = float(1.0/(1000.0*info['sump volume'])) # Find reasonable minimum bladder concentration
 bladder = bladder*(bladder>min_bladder) # Remove unphysical small values
@@ -61,18 +73,6 @@ ax_bt.set_yscale('log')
 ax_bt.set_xlabel('Time (hrs)')
 ax_bt.set_ylabel('Bacterial concentration (mm$^{-3}$)')
 ax_bt.set_title('Bladder')
-
-
-# Figure 2
-# Superposition of extraluminal wave profiles
-otimes = np.unique([np.argmax(opeaks>=opeaks[-1]*0.2*i) for i in range(1,5)]) # Find interesting times to plot: peak concentration = (0.2,0.4,0.6,0.8)*max
-for i in otimes: ax_op.plot(x,outside[i], label='$t = {}$ hrs'.format(time[i])) # Plot wave profile for times found above
-ax_op.plot(x,outside[-1], label='$t = {}$ hrs'.format(time[-1])) # Plot wave profile for final time (ie peak concentration = max)
-ax_op.ticklabel_format(axis='y', style='sci', scilimits=(0,0)) # Axis labels for concentration in standard form
-ax_op.set_xlabel('Distance from catheter base (mm)')
-ax_op.set_ylabel('Bacterial concentration (mm$^{-2}$)')
-ax_op.set_title('Extraluminal wave profiles')
-ax_op.legend(loc='upper right')
 
 
 # Figure 3
