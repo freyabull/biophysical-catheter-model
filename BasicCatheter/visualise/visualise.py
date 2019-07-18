@@ -56,6 +56,7 @@ min_bladder = float(1.0/(1000.0*info['sump volume'])) # Find reasonable minimum 
 bladder = bladder*(bladder>min_bladder) # Remove unphysical small values
 ax_bt.plot(time, bladder)
 ax_bt.xaxis.set_major_locator(plt.MultipleLocator(12)) # Format time axis ticks
+ax_bt.set_xlim(left=-1) # Force time to begin at 0
 ax_bt.set_yscale('log')
 ax_bt.set_xlabel('Time (hrs)')
 ax_bt.set_ylabel('Bacterial concentration (mm$^{-3}$)')
@@ -110,6 +111,8 @@ for i in range(1,t_len):
 ax_ow.plot(time[1:], peak_outside[1:]*dx) # Plot location of peak concentration
 ax_ow.fill_between(time, po_min*dx, po_max*dx, alpha=0.2) # Add shading indicating peak width
 ax_ow.xaxis.set_major_locator(plt.MultipleLocator(12)) # Format time axis ticks
+ax_ow.set_xlim(left=-1) # Force time to begin at 0
+ax_ow.set_ylim(bottom=-5, top=100*dx+5) # Ensure full length of catheter on axis
 ax_ow.set_xlabel('Time (hrs)')
 ax_ow.set_ylabel('Distance from catheter base (mm)')
 ax_ow.set_title('Position of extraluminal peak concentration')
@@ -129,6 +132,8 @@ for i in range(1,t_len):
 ax_iw.plot(time[1:], peak_inside[1:]*dx) # Plot location of peak concentration
 ax_iw.fill_between(time, pi_min*dx, pi_max*dx, alpha=0.2) # Add shading indicating peak width
 ax_iw.xaxis.set_major_locator(plt.MultipleLocator(12)) # Format time axis ticks
+ax_iw.set_xlim(left=-1) # Force time to begin at 0
+ax_iw.set_ylim(bottom=-5, top=100*dx+5) # Ensure full length of catheter on axis
 ax_iw.set_xlabel('Time (hrs)')
 ax_iw.set_ylabel('Distance from catheter tip (mm)')
 ax_iw.set_title('Position of intraluminal peak concentration')
@@ -157,6 +162,7 @@ for i in range(1,t_len):
     pass
 for i in range(6): ax_owf.fill_between(time, ofrontl[i]*dx, ofrontu[i]*dx, label='$n = 10^{}$ mm$^{{-2}}$'.format(i))
 ax_owf.xaxis.set_major_locator(plt.MultipleLocator(12)) # Format time axis ticks
+ax_owf.set_xlim(left=-1) # Force time to begin at 0
 ax_owf.set_xlabel('Time (hrs)')
 ax_owf.set_ylabel('Distance from catheter base (mm)')
 ax_owf.set_title('Wavefront outside')
@@ -186,6 +192,7 @@ for i in range(1,t_len):
     pass
 for i in range(6): ax_iwf.fill_between(time, ifrontl[i]*dx, ifrontu[i]*dx, label='$n = 10^{}$ mm$^{{-2}}$'.format(i))
 ax_iwf.xaxis.set_major_locator(plt.MultipleLocator(12)) # Format time axis ticks
+ax_iwf.set_xlim(left=-1) # Force time to begin at 0
 ax_iwf.set_xlabel('Time (hrs)')
 ax_iwf.set_ylabel('Distance from catheter tip (mm)')
 ax_iwf.set_title('Wavefront inside')
