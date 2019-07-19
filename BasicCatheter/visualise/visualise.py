@@ -64,12 +64,12 @@ ax_op.legend(loc='upper right')
 
 # Figure 2
 # Bladder concentration against time
-min_bladder = float(1.0/(1000.0*info['sump volume'])) # Find reasonable minimum bladder concentration
+min_bladder = float(1.0/info['sump volume']) # Find reasonable minimum bladder concentration
 bladder = bladder*(bladder>min_bladder) # Remove unphysical small values
 ax_bt.plot(time, bladder)
 ax_bt.xaxis.set_major_locator(plt.MultipleLocator(12)) # Format time axis ticks
 ax_bt.set_xlim(left=-1) # Force time to begin at 0
-ax_bt.set_yscale('log')
+ax_bt.set_yscale('log', nonposy='mask')
 ax_bt.set_xlabel('Time (hrs)')
 ax_bt.set_ylabel('Bacterial concentration (mm$^{-3}$)')
 ax_bt.set_title('Bladder')
