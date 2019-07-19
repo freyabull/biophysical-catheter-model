@@ -133,7 +133,7 @@ ax_iw.plot(time[1:], peak_inside[1:]*dx) # Plot location of peak concentration
 ax_iw.fill_between(time, pi_min*dx, pi_max*dx, alpha=0.2) # Add shading indicating peak width
 ax_iw.xaxis.set_major_locator(plt.MultipleLocator(12)) # Format time axis ticks
 ax_iw.set_xlim(left=-1) # Force time to begin at 0
-ax_iw.set_ylim(bottom=-5, top=100*dx+5) # Ensure full length of catheter on axis
+ax_iw.set_ylim(bottom=100*dx+5, top=-5) # Ensure full length of catheter on axis & direction reflects a vertical catheter
 ax_iw.set_xlabel('Time (hrs)')
 ax_iw.set_ylabel('Distance from catheter tip (mm)')
 ax_iw.set_title('Position of intraluminal peak concentration')
@@ -163,6 +163,7 @@ for i in range(1,t_len):
 for i in range(6): ax_owf.fill_between(time, ofrontl[i]*dx, ofrontu[i]*dx, label='$n = 10^{}$ mm$^{{-2}}$'.format(i))
 ax_owf.xaxis.set_major_locator(plt.MultipleLocator(12)) # Format time axis ticks
 ax_owf.set_xlim(left=-1) # Force time to begin at 0
+ax_owf.set_ylim(bottom=-5, top=100*dx+5) # Ensure scaling consistent with other graphs
 ax_owf.set_xlabel('Time (hrs)')
 ax_owf.set_ylabel('Distance from catheter base (mm)')
 ax_owf.set_title('Wavefront outside')
@@ -193,6 +194,7 @@ for i in range(1,t_len):
 for i in range(6): ax_iwf.fill_between(time, ifrontl[i]*dx, ifrontu[i]*dx, label='$n = 10^{}$ mm$^{{-2}}$'.format(i))
 ax_iwf.xaxis.set_major_locator(plt.MultipleLocator(12)) # Format time axis ticks
 ax_iwf.set_xlim(left=-1) # Force time to begin at 0
+ax_iwf.set_ylim(bottom=100*dx+5, top=-5) # Ensure full length of catheter on axis & direction reflects a vertical catheter
 ax_iwf.set_xlabel('Time (hrs)')
 ax_iwf.set_ylabel('Distance from catheter tip (mm)')
 ax_iwf.set_title('Wavefront inside')
