@@ -39,8 +39,8 @@ peak_outside = np.argmax(outside, axis=1)
 peak_inside = np.argmax(inside, axis=1)
 
 # Find concentration values at peaks
-opeaks = np.array([outside[i][peak_outside[i]] for i in range(1,t_len)])
-ipeaks = np.array([inside[i][peak_inside[i]] for i in range(1,t_len)])
+opeaks = np.array([outside[i][peak_outside[i]] for i in range(t_len)])
+ipeaks = np.array([inside[i][peak_inside[i]] for i in range(t_len)])
 
 
 # Set up figure/environment
@@ -105,7 +105,7 @@ po_max = np.empty(t_len)
 po_min[:] = np.nan
 po_max[:] = np.nan
 for i in range(1,t_len):
-    po_range = np.nonzero(outside[i]>=(outside[i][int(peak_outside[i])]*0.99)) # Find points within peak
+    po_range = np.nonzero(outside[i]>=(opeaks[i]*0.99)) # Find points within peak
     if len(po_range[0]): po_min[i] = po_range[0][0]; po_max[i] = po_range[0][-1] # Find edges of peak
     pass
 ax_ow.plot(time[1:], peak_outside[1:]*dx) # Plot location of peak concentration
@@ -126,7 +126,7 @@ pi_max = np.empty(t_len)
 pi_min[:] = np.nan
 pi_max[:] = np.nan
 for i in range(1,t_len):
-    pi_range = np.nonzero(inside[i]>=(inside[i][int(peak_inside[i])]*0.99)) # Find points within peak
+    pi_range = np.nonzero(inside[i]>=(ipeaks[i]*0.99)) # Find points within peak
     if len(pi_range[0]): pi_min[i] = pi_range[0][0]; pi_max[i] = pi_range[0][-1] # Find edges of peak
     pass
 ax_iw.plot(time[1:], peak_inside[1:]*dx) # Plot location of peak concentration
