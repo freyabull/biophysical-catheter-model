@@ -34,4 +34,5 @@ void Catheter::update()
 	// Swap the old and new data ready for the next timestep.
 	std::swap(outside, old_outside);
 	std::swap(inside, old_inside);
+	if (isnan(bladder)) { bladder = 0.0; } // Avoid issues arising from a zero carrying capacity
 }

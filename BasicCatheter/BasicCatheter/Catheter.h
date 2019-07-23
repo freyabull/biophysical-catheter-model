@@ -22,7 +22,7 @@ public:
 		double bag_concentration = -1.0);
 	~Catheter();
 
-	// Swap the old and new data ready for the next timestep.
+	// Swap the old and new data ready for the next timestep, check bladder is a number.
 	void update();
 };
 
