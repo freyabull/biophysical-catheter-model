@@ -40,7 +40,6 @@ void PDE::solve()
 					record(i);
 				}
 				// Deal with boundary condition
-				c11 = c10 * data->bladder; // Update c10 to include current concentration
 				step_c();
 				step_dc();
 				// Solve for current timestep
@@ -58,7 +57,6 @@ void PDE::solve()
 					record(i);
 				}
 				// Deal with boundary condition
-				c11 = c10 * data->bladder; // Update c10 to include current concentration
 				step_c();
 				step_de();
 				// Solve for current timestep
@@ -80,7 +78,6 @@ void PDE::solve()
 					record(i);
 				}
 				// Deal with boundary condition
-				c11 = c10 * data->bladder; // Update c10 to include current concentration
 				step_e();
 				step_dc();
 				// Solve for current timestep
@@ -98,7 +95,6 @@ void PDE::solve()
 					record(i);
 				}
 				// Deal with boundary condition
-				c11 = c10 * data->bladder; // Update c10 to include current concentration
 				step_e();
 				step_de();
 				// Solve for current timestep
@@ -125,7 +121,6 @@ void PDE::solve(std::ofstream &file)
 					record(i, file);
 				}
 				// Deal with boundary condition
-				c11 = c10 * data->bladder; // Update c10 to include current concentration
 				step_c();
 				step_dc();
 				// Solve for current timestep
@@ -142,7 +137,6 @@ void PDE::solve(std::ofstream &file)
 					record(i, file);
 				}
 				// Deal with boundary condition
-				c11 = c10 * data->bladder; // Update c10 to include current concentration
 				step_c();
 				step_de();
 				// Solve for current timestep
@@ -163,7 +157,6 @@ void PDE::solve(std::ofstream &file)
 					record(i, file);
 				}
 				// Deal with boundary condition
-				c11 = c10 * data->bladder; // Update c10 to include current concentration
 				step_e();
 				step_dc();
 				// Solve for current timestep
@@ -180,7 +173,6 @@ void PDE::solve(std::ofstream &file)
 					record(i, file);
 				}
 				// Deal with boundary condition
-				c11 = c10 * data->bladder; // Update c10 to include current concentration
 				step_e();
 				step_de();
 				// Solve for current timestep
@@ -193,65 +185,65 @@ void PDE::solve(std::ofstream &file)
 void PDE::step()
 {
 	// Boundary condition for top of catheter (diffusion into bladder)
-	data->outside[x_len-1] = c1 * (data->bladder 
-		+ data->old_outside[x_len-2]) + data->old_outside[x_len-1]
-		* (c2 - c3 * data->old_outside[x_len-1]);
+	data->outside[x_len-1] = co2 * data->old_outside[x_len-2] + co3*data->bladder
+		+ data->old_outside[x_len-1] * (co4 - co5 * data->old_outside[x_len-1]);
 	// Fisher wave equation for outside of catheter
 	for (int j = 1; j < x_len-1; ++j) 
 	{
-		data->outside[j] = c1 * (data->old_outside[j+1]
+		data->outside[j] = co1 * (data->old_outside[j+1]
 			+ data->old_outside[j-1]) + data->old_outside[j] 
-			* (c2 - c3 * data->old_outside[j]);
+			* (co4 - co5 * data->old_outside[j]);
 	}
 
 	
-	// Boundary conditions. Diffusion across from bladder
-	data->inside[0] = c7 * (data->bladder + data->old_inside[1]) + data->old_inside[0]
-		* (c8 - c9 * data->old_inside[0]) + c11;
+	// Boundary conditions. Diffusion across from bladder to inside
+	data->inside[0] = ci2 * data->old_inside[1] + ci3 * data->bladder
+		+ data->old_inside[0] * (ci4 - ci5 * data->old_inside[0]) + ci7;
 	// Fisher wave equation with source term for inside of catheter
 	for (int k = 1; k < x_len-1; ++k) 
 	{
-		data->inside[k] = c7 * (data->old_inside[k + 1]
-			+ data->old_inside[k - 1]) + data->old_inside[k] * (c8 - c9
-				* data->old_inside[k]) + c11;
+		data->inside[k] = ci1 * (data->old_inside[k + 1]
+			+ data->old_inside[k - 1]) + data->old_inside[k] * (ci4 - ci5
+				* data->old_inside[k]) + ci7;
 	}
 
 	// Bladder is a well-mixed volume with diffusion to catheter
-	data->bladder = c4 * (data->old_outside[x_len - 1] +  
-		data->old_inside[0]) + data->bladder * (c5 - c6 * data->bladder);
+	data->bladder = cb1 * data->old_outside[x_len - 1] + cb2 *
+		data->old_inside[0] + data->bladder * (cb3 - cb4 * data->bladder);
 
 	// Update old data
 	data->update();
+	ci7 = ci6 * data->bladder; // Update constant governing intraluminal deposition to include current concentration
 }
 
 void PDE::step_c()
 {
 	// No external contamination boundary condition: no flux.
-	data->outside[0] = c1 * (2.0 * data->old_outside[1])
-		+ data->old_outside[0] * (c2 - c3 * data->old_outside[0]);
+	data->outside[0] = co1 * (2.0 * data->old_outside[1])
+		+ data->old_outside[0] * (co4 - co5 * data->old_outside[0]);
 }
 
 void PDE::step_e()
 {
 	// External contamination from skin: fixed boundary.
-	data->outside[0] = c1 * (data->old_outside[1] + data->skin_concentration)
-		+ data->old_outside[0] * (c2 - c3 * data->old_outside[0]);
+	data->outside[0] = co1 * (data->old_outside[1] + data->skin_concentration)
+		+ data->old_outside[0] * (co4 - co5 * data->old_outside[0]);
 }
 
 void PDE::step_dc()
 {
 	//  No external contamination boundary condition: no flux.
-	data->inside[x_len - 1] = c7 * (2.0 * data->old_inside[x_len - 2])
-		+ data->old_inside[x_len - 1] * (c8 - c9 * data->old_inside[x_len - 1])
-		+ c11;
+	data->inside[x_len - 1] = ci1 * (2.0 * data->old_inside[x_len - 2])
+		+ data->old_inside[x_len - 1] * (ci4 - ci5 * data->old_inside[x_len - 1])
+		+ ci7;
 }
 
 void PDE::step_de()
 {
 	//  External contamination boundary condition: fixed boundary.
-	data->inside[x_len - 1] = c7 * (data->old_inside[x_len - 2] 
-		+ data->bag_concentration) + data->old_inside[x_len - 1] * (c8 - c9 
-			* data->old_inside[x_len - 1]) + c11;
+	data->inside[x_len - 1] = ci1 * (data->old_inside[x_len - 2] 
+		+ data->bag_concentration) + data->old_inside[x_len - 1] * (ci4 - ci5 
+			* data->old_inside[x_len - 1]) + ci7;
 }
 
 void PDE::record(int current_step)
@@ -287,15 +279,20 @@ void PDE::initialize()
 	N = int(time / dt);
 	print_step = int(print_interval / dt);
 	dx = param->catheter_length / (x_len-1);
-	c1 = param->diffusivity * dt / (dx*dx);
-	c2 = 1.0 - 2.0 * c1 + param->growth_rate1 * dt;
-	c3 = param->growth_rate1 * dt / param->carrying_capacity1;
-	c4 = param->diffusivity * dt / (param->sump_volume);
-	c5 = 1.0 + param->growth_rate2 * dt;
-	c6 = param->growth_rate2 * dt / param->carrying_capacity2;
-	c7 = param->diffusivity *dt / (dx*dx);
-	c8 = 1.0 - 2.0 * c7 + param->growth_rate3*dt;
-	c9 = param->growth_rate3 * dt / param->carrying_capacity3;
-	c10 = param->stickiness * 2 * 3.14 * shell_thickness * param->catheter_radius * dt;
-	c11 = c10 * data->bladder;
+	co1 = param->diffusivity * dt / (dx*dx);
+	co2 = param->diffusivity * dt * (2 - param->coupling_o) / (dx*dx);
+	co3 = param->diffusivity * dt * param->coupling_o / (dx*dx);
+	co4 = 1.0 - 2.0 * co1 + param->growth_rate1 * dt;
+	co5 = param->growth_rate1 * dt / param->carrying_capacity1;
+	cb1 = param->diffusivity * dt * param->coupling_o/ (param->sump_volume);
+	cb2 = param->diffusivity * dt * param->coupling_i/ (param->sump_volume);
+	cb3 = 1.0 + param->growth_rate2 * dt - (param->coupling_o+param->coupling_i) * param->diffusivity * dt / param->sump_volume;
+	cb4 = param->growth_rate2 * dt / param->carrying_capacity2;
+	ci1 = param->diffusivity * dt / (dx*dx);
+	ci2 = param->diffusivity * dt * (2 - param->coupling_i) / (dx*dx);
+	ci3 = param->diffusivity * dt * param->coupling_i / (dx*dx);
+	ci4 = 1.0 - 2.0 * ci1 + param->growth_rate3*dt;
+	ci5 = param->growth_rate3 * dt / param->carrying_capacity3;
+	ci6 = param->stickiness * 2 * 3.14 * shell_thickness * param->catheter_radius * dt;
+	ci7 = ci6 * data->bladder;
 }

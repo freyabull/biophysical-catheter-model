@@ -29,17 +29,22 @@ public:
 private:
 	int N; // Number of time steps
 	int print_step; // Time-step at which to output results
-	double c1; // Constant for outside of catheter
-	double c2; // Constant for outside of catheter
-	double c3; // Constant for outside of catheter
-	double c4; // Constant for bladder
-	double c5; // Constant for bladder
-	double c6; // Constant for bladder
-	double c7; // Constant for inside of catheter
-	double c8; // Constant for inside of catheter
-	double c9; // Constant for inside of catheter
-	double c10; // Constant for inside of catheter
-	double c11; // Constant for inside of catheter
+	double co1; // Constant for outside of catheter
+	double co2; // Constant for outside of catheter
+	double co3; // Constant for outside of catheter
+	double co4; // Constant for outside of catheter
+	double co5; // Constant for outside of catheter
+	double cb1; // Constant for bladder
+	double cb2; // Constant for bladder
+	double cb3; // Constant for bladder
+	double cb4; // Constant for bladder
+	double ci1; // Constant for inside of catheter
+	double ci2; // Constant for inside of catheter
+	double ci3; // Constant for inside of catheter
+	double ci4; // Constant for inside of catheter
+	double ci5; // Constant for inside of catheter
+	double ci6; // Coefficient of intraluminal deposition rate
+	double ci7; // Intraluminal deposition rate
 	// Solve for current time-step
 	void step(); 
 	// Case for no external contamination (skin_concentration < 0)
