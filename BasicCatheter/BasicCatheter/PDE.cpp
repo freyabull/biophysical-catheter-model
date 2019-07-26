@@ -280,7 +280,7 @@ void PDE::initialize()
 	print_step = int(print_interval / dt);
 	dx = param->catheter_length / (x_len-1);
 	co1 = param->diffusivity * dt / (dx*dx);
-	co2 = param->diffusivity * dt * (2 - 0.5*param->coupling_o - 0.5*param->coupling_oi) / (dx*dx);
+	co2 = param->diffusivity * dt * (2 - param->coupling_o - param->coupling_oi) / (dx*dx);
 	co3 = param->diffusivity * dt * param->coupling_o / (dx*dx);
 	coi = param->diffusivity * dt * param->coupling_oi / (dx*dx);
 	co4 = 1.0 - 2.0 * co1 + param->growth_rate1 * dt;
@@ -290,7 +290,7 @@ void PDE::initialize()
 	cb3 = 1.0 + param->growth_rate2 * dt - (param->coupling_o+param->coupling_i) * param->diffusivity * dt / param->sump_volume;
 	cb4 = param->growth_rate2 * dt / param->carrying_capacity2;
 	ci1 = param->diffusivity * dt / (dx*dx);
-	ci2 = param->diffusivity * dt * (2 - 0.5*param->coupling_i - 0.5*param->coupling_oi) / (dx*dx);
+	ci2 = param->diffusivity * dt * (2 - param->coupling_i - param->coupling_oi) / (dx*dx);
 	ci3 = param->diffusivity * dt * param->coupling_i / (dx*dx);
 	ci4 = 1.0 - 2.0 * ci1 + param->growth_rate3*dt;
 	ci5 = param->growth_rate3 * dt / param->carrying_capacity3;
