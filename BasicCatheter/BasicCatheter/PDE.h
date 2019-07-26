@@ -32,6 +32,7 @@ private:
 	double co1; // Constant for outside of catheter
 	double co2; // Constant for outside of catheter
 	double co3; // Constant for outside of catheter
+	double coi; // Constant for diffusion between inside and outside
 	double co4; // Constant for outside of catheter
 	double co5; // Constant for outside of catheter
 	double cb1; // Constant for bladder

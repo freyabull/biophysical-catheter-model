@@ -185,7 +185,7 @@ void PDE::solve(std::ofstream &file)
 void PDE::step()
 {
 	// Boundary condition for top of catheter (diffusion into bladder)
-	data->outside[x_len-1] = co2 * data->old_outside[x_len-2] + co3*data->bladder
+	data->outside[x_len-1] = co2 * data->old_outside[x_len-2] + co3*data->bladder + coi*data->old_inside[0]
 		+ data->old_outside[x_len-1] * (co4 - co5 * data->old_outside[x_len-1]);
 	// Fisher wave equation for outside of catheter
 	for (int j = 1; j < x_len-1; ++j) 
@@ -197,7 +197,7 @@ void PDE::step()
 
 	
 	// Boundary conditions. Diffusion across from bladder to inside
-	data->inside[0] = ci2 * data->old_inside[1] + ci3 * data->bladder
+	data->inside[0] = ci2 * data->old_inside[1] + ci3 * data->bladder + coi*data->old_outside[x_len-1]
 		+ data->old_inside[0] * (ci4 - ci5 * data->old_inside[0]) + ci7;
 	// Fisher wave equation with source term for inside of catheter
 	for (int k = 1; k < x_len-1; ++k) 
@@ -280,8 +280,9 @@ void PDE::initialize()
 	print_step = int(print_interval / dt);
 	dx = param->catheter_length / (x_len-1);
 	co1 = param->diffusivity * dt / (dx*dx);
-	co2 = param->diffusivity * dt * (2 - param->coupling_o) / (dx*dx);
+	co2 = param->diffusivity * dt * (2 - 0.5*param->coupling_o - 0.5*param->coupling_oi) / (dx*dx);
 	co3 = param->diffusivity * dt * param->coupling_o / (dx*dx);
+	coi = param->diffusivity * dt * param->coupling_oi / (dx*dx);
 	co4 = 1.0 - 2.0 * co1 + param->growth_rate1 * dt;
 	co5 = param->growth_rate1 * dt / param->carrying_capacity1;
 	cb1 = param->diffusivity * dt * param->coupling_o/ (param->sump_volume);
@@ -289,7 +290,7 @@ void PDE::initialize()
 	cb3 = 1.0 + param->growth_rate2 * dt - (param->coupling_o+param->coupling_i) * param->diffusivity * dt / param->sump_volume;
 	cb4 = param->growth_rate2 * dt / param->carrying_capacity2;
 	ci1 = param->diffusivity * dt / (dx*dx);
-	ci2 = param->diffusivity * dt * (2 - param->coupling_i) / (dx*dx);
+	ci2 = param->diffusivity * dt * (2 - 0.5*param->coupling_i - 0.5*param->coupling_oi) / (dx*dx);
 	ci3 = param->diffusivity * dt * param->coupling_i / (dx*dx);
 	ci4 = 1.0 - 2.0 * ci1 + param->growth_rate3*dt;
 	ci5 = param->growth_rate3 * dt / param->carrying_capacity3;
