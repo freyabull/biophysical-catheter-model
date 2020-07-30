@@ -3,6 +3,9 @@
 ################################################################################
 
 /BasicCatheter/BasicCatheter/results.csv
-/BasicCatheter/.vs/BasicCatheter/v15/Browse.VC.opendb
-/BasicCatheter/.vs/BasicCatheter/v15/Solution.VC.db-shm
-/BasicCatheter/.vs/BasicCatheter/v15/Solution.VC.db-wal
+/BasicCatheter/visualise/visualise/Lib
+/BasicCatheter/visualise/visualise/Scripts
+/BasicCatheter/visualise/visualise/pip-selfcheck.json
+/BasicCatheter/visualise/visualise/pyvenv.cfg
+/.vs/catheter/v16
+/BasicCatheter/.vs/BasicCatheter/v16

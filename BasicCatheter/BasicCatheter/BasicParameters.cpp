@@ -4,24 +4,25 @@
 #include "BasicParameters.h"
 
 
-BasicParameters::BasicParameters()
+BasicParameters::BasicParameters() :
+	diffusivity(0.0), growth_rate1(0.0), carrying_capacity1(0.0), 
+	growth_rate2(0.0), carrying_capacity2(0.0), growth_rate3(0.0),
+	carrying_capacity3(0.0), urine_rate(0.0), catheter_radius(0.0), 
+	external_catheter_radius(0.0), stickiness(0.0), sump_volume(0.0), 
+	catheter_length(0.0), attachment_rate(0.0), detachment_rate(0.0)
 {
 }
 
-BasicParameters::BasicParameters(double t_diffusivity, double t_growth_rate1,
-	double t_carrying_capacity1, double t_growth_rate2,
-	double t_carrying_capacity2, double t_growth_rate3,
-	double t_carrying_capacity3, double t_urine_rate,
-	double t_catheter_radius, double t_stickiness, double t_sump_volume,
-	double t_catheter_length, double t_coupling_o, double t_coupling_i,
-	double t_coupling_oi) :
-	diffusivity(t_diffusivity), growth_rate1(t_growth_rate1),
-	carrying_capacity1(t_carrying_capacity1), growth_rate2(t_growth_rate2),
-	carrying_capacity2(t_carrying_capacity2), growth_rate3(t_growth_rate3),
-	carrying_capacity3(t_carrying_capacity3), urine_rate(t_urine_rate),
-	catheter_radius(t_catheter_radius), stickiness(t_stickiness),
-	sump_volume(t_sump_volume), catheter_length(t_catheter_length),
-	coupling_o(t_coupling_o), coupling_i(t_coupling_i), coupling_oi(t_coupling_oi)
+BasicParameters::BasicParameters(double t_diffusivity, double gr1, double cc1, 
+	double gr2, double cc2, double gr3, double cc3, double t_urine_rate,
+	double in_radius, double ex_radius, double t_stickiness, double volume,
+	double length, double attach, double detach) :
+	diffusivity(t_diffusivity), growth_rate1(gr1), carrying_capacity1(cc1), 
+	growth_rate2(gr2), carrying_capacity2(cc2), growth_rate3(gr3), 
+	carrying_capacity3(cc3), urine_rate(t_urine_rate), 
+	catheter_radius(in_radius), external_catheter_radius(ex_radius), 
+	stickiness(t_stickiness), sump_volume(volume), catheter_length(length),
+	attachment_rate(attach), detachment_rate(detach)
 {
 }
 

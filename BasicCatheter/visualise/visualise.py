@@ -16,8 +16,8 @@ info = pd.read_csv(file,  nrows=1)
 
 
 #Extract data series from dataframe
-t_len = int(info['simulation length']/info['print step']) # number of time steps
-dt = float(info['print step']/3600) # print interval (hrs)
+t_len = int(info['simulation length']/info['print interval']) # number of time steps
+dt = float(info['print interval']/3600) # print interval (hrs)
 time = dt*np.array(range(0, t_len)) # time series
 
 x_len = int(info['num of x steps']) # number of x steps
