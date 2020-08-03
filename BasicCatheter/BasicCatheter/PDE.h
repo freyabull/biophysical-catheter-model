@@ -4,6 +4,8 @@
 #include <iostream>
 #include <cmath>
 #include <fstream>
+#include "Integrate.h"
+#include <vector>
 
 class PDE // Methods for solving the pde problem
 {
@@ -30,6 +32,8 @@ public:
 private:
 	int N; // Number of time steps
 	int print_step; // Time-step at which to output results
+	double R_square; // Internal catheter radius squared
+	double dr_square; // r step squared
 	double o1; // Constant for outside of catheter: D dt/ dx^2
 	double o2; // Constant for outside of catheter: 1 - 2 D dt / dx^2 + r dt
 	double o3; // Constant for outside of catheter: r dt / kappa
@@ -48,8 +52,8 @@ private:
 	double f7b; // Constant for inside flow : 2 lambda dt / (pi R^2 dx)
 	double f8b; // Constant for inside flow : 1 - 2 D dt / dr^2 - 2 lambda dt / (pi R^2 dx)
 	double f9; // Constant for inside flow : D dt / dr
-	double R_square; // Internal catheter radius squared
-	double dr_square; // r step squared
+	double of1; // Constant for calculation of outflow density : 4 dr / R^2
+	double of2; // Constant for calculation of outflow density : 4 dr^3 / R^4
 	// Solve for current time-step using explicit methods
 	void step(); 
 	// Case for no external contamination (skin_concentration < 0)
@@ -60,6 +64,8 @@ private:
 	void step_bc_drainage_clean();
 	// Case for drainage contamination (bag_concentration > 0)
 	void step_bc_drainage_contamination();
+	// Find the average density in the flow out the bottom of the catheter
+	void find_outflow_density();
 	// Output results for current time-step to console
 	void record(int current_step); 
 	// Output results for current time-step to given file

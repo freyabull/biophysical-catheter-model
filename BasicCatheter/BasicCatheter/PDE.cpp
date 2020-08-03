@@ -267,6 +267,20 @@ void PDE::step_bc_drainage_contamination()
 		+ f9 * data->get_flow(x_len - 1, r_len - 2);
 }
 
+void PDE::find_outflow_density()
+{
+	// Find output density (and error estimate)
+	std::vector<double> integrand;
+	for (int r = 0; r < r_len; r++) // radial index
+	{
+		double val = data->get_flow(x_len - 1, r) * (of1 * r - of2 * r * r * r);
+		integrand.push_back(val);
+	}
+	Integrate1D::results result = Integrate1D::discrete_trapezoidal(integrand,0.0,param->catheter_radius);
+	data->outflow = result.sol;
+	data->of_error = result.err;
+}
+
 void PDE::record(int current_step)
 { 
 	std::cout << "Time is " << double(current_step) * dt / 3600.0 << "hrs \n";
@@ -279,7 +293,7 @@ void PDE::record(int current_step)
 
 void PDE::record(int current_step, std::ofstream &file)
 {
-	// Record flow profile as well?
+	find_outflow_density();
 	double out_time = double(current_step) * dt / 3600.0;
 	file << "o" << out_time;
 	for (int i = 0; i < x_len; ++i) {
@@ -291,7 +305,8 @@ void PDE::record(int current_step, std::ofstream &file)
 	for (int i = 0; i < x_len; ++i) {
 		file << "," << data->inside[i];
 	}
-	file << "\n";
+	file << "\nf" << out_time;
+	file << "," << data->outflow << "," << data->of_error << "\n";
 }
 
 void PDE::initialize()
@@ -328,6 +343,8 @@ void PDE::initialize()
 	f7b = f2 * R_square; 
 	f8b = f3 - f7b; 
 	f9 = param->diffusivity * dt/ dr; 
+	of1 = 4.0 * dr / R_square; 
+	of2 = 4.0 * dr * dr_square / (R_square * R_square); 
 }
 
 void PDE::stability_check()

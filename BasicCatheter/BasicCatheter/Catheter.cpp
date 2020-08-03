@@ -6,7 +6,7 @@
 
 
 Catheter::Catheter() :
-	bladder(0.0), skin_concentration(0.0),
+	bladder(0.0), outflow(0.0), of_error(0.0), skin_concentration(0.0),
 	bag_concentration(0.0), x_len(0), r_len(0)
 {
 }
@@ -15,7 +15,7 @@ Catheter::Catheter(double t_skin_conc, double t_bag_conc, int t_x_len,
 	               int t_r_len) :
 	outside(t_x_len, 0.0), old_outside(t_x_len, 0.0), inside(t_x_len, 0.0), 
 	old_inside(t_x_len, 0.0), flow(t_x_len*t_r_len, 0.0), 
-	old_flow(t_x_len* t_r_len, 0.0), bladder(0.0), 
+	old_flow(t_x_len* t_r_len, 0.0), bladder(0.0), outflow(0.0), of_error(0.0),
 	skin_concentration(t_skin_conc), bag_concentration(t_bag_conc), 
 	x_len(t_x_len), r_len(t_r_len)
 {
@@ -25,7 +25,7 @@ Catheter::Catheter(std::vector<double> t_outside, double t_bladder,
 	               std::vector<double> t_inside, double t_skin_conc, 
 	               double t_bag_conc, int t_r_len) :
 	outside(t_outside), old_outside(t_outside), bladder(t_bladder), 
-	inside(t_inside), old_inside(t_inside), 
+	outflow(0.0), of_error(0.0), inside(t_inside), old_inside(t_inside),
 	flow(t_outside.size()* t_r_len, t_bladder),
 	old_flow(t_outside.size()* t_r_len, t_bladder), 
 	skin_concentration(t_skin_conc), bag_concentration(t_bag_conc), 

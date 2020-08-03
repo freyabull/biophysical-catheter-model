@@ -28,12 +28,14 @@ x = dx*np.array(range(0,x_len)) # x series
 outside = np.zeros((t_len,df.shape[1]))
 bladder = np.zeros(t_len)
 inside = np.zeros((t_len,df.shape[1]))
+outflow = np.zeros((t_len,2))
 for i in range(0, t_len):
-    outside[i] = df.iloc[3*i]
-    bladder[i] = df.iloc[3*i+1][1]
-    inside[i] = df.iloc[3*i+2]
+    outside[i] = df.iloc[4*i]
+    bladder[i] = df.iloc[4*i+1][1]
+    inside[i] = df.iloc[4*i+2]
+    outflow[i] = df.iloc[4*i+3][0:2]
 
-
+print(outflow)
 # Data processing required for multiple graphs
 # Find locations of peak concentration
 peak_outside = np.argmax(outside, axis=1)
