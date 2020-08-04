@@ -28,14 +28,16 @@ x = dx*np.array(range(0,x_len)) # x series
 outside = np.zeros((t_len,df.shape[1]))
 bladder = np.zeros(t_len)
 inside = np.zeros((t_len,df.shape[1]))
-outflow = np.zeros((t_len,2))
+outflow = np.zeros(t_len)
+oferr = np.zeros(t_len)
 for i in range(0, t_len):
     outside[i] = df.iloc[4*i]
     bladder[i] = df.iloc[4*i+1][1]
     inside[i] = df.iloc[4*i+2]
-    outflow[i] = df.iloc[4*i+3][0:2]
+    outflow[i] = df.iloc[4*i+3][1]
+    oferr[i] = df.iloc[4*i+3][2]
 
-print(outflow)
+
 # Data processing required for multiple graphs
 # Find locations of peak concentration
 peak_outside = np.argmax(outside, axis=1)
@@ -202,5 +204,36 @@ ax_iwf.set_xlabel('Time (hrs)')
 ax_iwf.set_ylabel('Distance from catheter tip (mm)')
 ax_iwf.set_title('Wavefront inside')
 ax_iwf.legend(loc='upper right')
+
+
+fig2 = plt.figure()
+#time, bladder, outflow
+outflow = outflow*(outflow>min_bladder) # Remove unphysical small values
+plt.scatter(time, bladder,label='Bladder')
+plt.errorbar(time, outflow, yerr=oferr, ecolor='r', barsabove=True, marker='s',linestyle="None",label='Outflow')
+plt.yscale('log')
+plt.xlabel('Time (hrs)')
+plt.ylabel('Bacterial concentration (mm$^{-2}$)')
+plt.legend()
+
+fig3 = plt.figure()
+concs = [1e0,1e1,1e2,1e3,1e4,1e5,1e6,1e7]
+bindex = np.searchsorted(bladder,concs, side='right')
+#truthy = bindex<t_len
+#trunc = [bindex[i] for i in range(len(bindex)) if (bindex<t_len)[i]]
+#print(trunc)
+#b_times = time[trunc]
+b_times=time[bindex*(bindex<t_len)]
+print(b_times)
+ofindex = np.searchsorted(outflow,concs, side='right')
+#trunc2 = [ofindex[i] for i in range(len(ofindex)) if (ofindex<t_len)[i]]
+#of_times = time[trunc2]
+of_times = time[ofindex*(ofindex<t_len)]
+print(of_times)
+plt.scatter(concs, of_times-b_times)
+plt.xscale('log')
+plt.xlabel('Bacterial concentration (mm$^{-2}$)')
+plt.ylabel('Lagtime between bladder and outflow')
+# How do I ensure these are always the same length?
 
 plt.show()
