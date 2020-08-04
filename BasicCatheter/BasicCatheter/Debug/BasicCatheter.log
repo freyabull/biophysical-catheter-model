@@ -1,2 +1,4 @@
-﻿  PDE.cpp
+﻿  BasicCatheter.cpp
+  Importing getopt library
+C:\Users\freya\source\repos\catheter\BasicCatheter\BasicCatheter\BasicCatheter.cpp(67,53): warning C4552: '*': result of expression not used
   BasicCatheter.vcxproj -> C:\Users\freya\Source\Repos\catheter\BasicCatheter\Debug\BasicCatheter.exe
