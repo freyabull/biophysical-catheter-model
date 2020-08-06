@@ -8,7 +8,7 @@
 
 int main() {
 	// File root for saving
-	std::string file_root = "results/urine_rates";
+	std::string file_root = "results/urine_rates/";
 
 	// Parameter being explored
 	// dilution rate: physically relevant range is from 25/6 mm^3 s^-1 to 2500/6 mm^3 s^-1
@@ -35,7 +35,7 @@ int main() {
 	double initial_skin_conc = 1e2; // Concentration of bacteria on the skin at time of catheter insertion
 	double lambda = 1.0 / catheter_length; // Scale factor for exponential distributions
 	int simulation_length = 86400 * 2; // Timeframe of simulation, in s
-	double dt = 0.1; // Time step
+	double dt = 0.05; // Time step
 	int print_interval = 3600; // Time interval at which to output data (s)
 	double catheter_external_radius = catheter_radius;// +1.0; // External catheter radius in mm
 	double attachment_rate = 4 * 3.14 * diffusivity * 1e-3; // Rate at which a bacterium in contact sticks (s^-1) Smoluchowski - 4 pi D sigma
@@ -50,7 +50,7 @@ int main() {
 		// Kind of silly work around to cast i to str type
 		std::ostringstream ss;
 		ss << i;
-		std::string file_name = file_root + "_" + ss.str() + ".csv";
+		std::string file_name = file_root + ss.str() + ".csv";
 		std::cout << file_name << std::endl;
 		results_file.open(file_name, std::ios::trunc);
 		if (!results_file.is_open()) {
