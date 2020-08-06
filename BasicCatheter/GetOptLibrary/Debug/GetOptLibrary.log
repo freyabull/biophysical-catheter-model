@@ -1,27 +1,27 @@
 ﻿  pch.cpp
   getopt.cpp
   Importing getopt library
-C:\Users\freya\Source\Repos\catheter\BasicCatheter\GetOptLibrary\getopt.cpp(51,14): warning C4273: 'optind': inconsistent dll linkage
-C:\Users\freya\Source\Repos\catheter\BasicCatheter\GetOptLibrary\getopt.h(87,25): message : see previous definition of 'optind'
-C:\Users\freya\Source\Repos\catheter\BasicCatheter\GetOptLibrary\getopt.cpp(52,14): warning C4273: 'opterr': inconsistent dll linkage
-C:\Users\freya\Source\Repos\catheter\BasicCatheter\GetOptLibrary\getopt.h(88,25): message : see previous definition of 'opterr'
-C:\Users\freya\Source\Repos\catheter\BasicCatheter\GetOptLibrary\getopt.cpp(53,14): warning C4273: 'optopt': inconsistent dll linkage
-C:\Users\freya\Source\Repos\catheter\BasicCatheter\GetOptLibrary\getopt.h(89,25): message : see previous definition of 'optopt'
-C:\Users\freya\Source\Repos\catheter\BasicCatheter\GetOptLibrary\getopt.cpp(75,15): warning C4273: 'optarg_a': inconsistent dll linkage
-C:\Users\freya\Source\Repos\catheter\BasicCatheter\GetOptLibrary\getopt.h(99,27): message : see previous definition of 'optarg_a'
-C:\Users\freya\Source\Repos\catheter\BasicCatheter\GetOptLibrary\getopt.cpp(496,1): warning C4273: 'getopt_a': inconsistent dll linkage
-C:\Users\freya\Source\Repos\catheter\BasicCatheter\GetOptLibrary\getopt.h(100,25): message : see previous definition of 'getopt_a'
-C:\Users\freya\Source\Repos\catheter\BasicCatheter\GetOptLibrary\getopt.cpp(500,1): warning C4273: 'getopt_long_a': inconsistent dll linkage
-C:\Users\freya\Source\Repos\catheter\BasicCatheter\GetOptLibrary\getopt.h(101,25): message : see previous definition of 'getopt_long_a'
-C:\Users\freya\Source\Repos\catheter\BasicCatheter\GetOptLibrary\getopt.cpp(504,1): warning C4273: 'getopt_long_only_a': inconsistent dll linkage
-C:\Users\freya\Source\Repos\catheter\BasicCatheter\GetOptLibrary\getopt.h(102,25): message : see previous definition of 'getopt_long_only_a'
-C:\Users\freya\Source\Repos\catheter\BasicCatheter\GetOptLibrary\getopt.cpp(535,18): warning C4273: 'optarg_w': inconsistent dll linkage
-C:\Users\freya\Source\Repos\catheter\BasicCatheter\GetOptLibrary\getopt.h(112,30): message : see previous definition of 'optarg_w'
-C:\Users\freya\Source\Repos\catheter\BasicCatheter\GetOptLibrary\getopt.cpp(956,1): warning C4273: 'getopt_w': inconsistent dll linkage
-C:\Users\freya\Source\Repos\catheter\BasicCatheter\GetOptLibrary\getopt.h(113,25): message : see previous definition of 'getopt_w'
-C:\Users\freya\Source\Repos\catheter\BasicCatheter\GetOptLibrary\getopt.cpp(960,1): warning C4273: 'getopt_long_w': inconsistent dll linkage
-C:\Users\freya\Source\Repos\catheter\BasicCatheter\GetOptLibrary\getopt.h(114,25): message : see previous definition of 'getopt_long_w'
-C:\Users\freya\Source\Repos\catheter\BasicCatheter\GetOptLibrary\getopt.cpp(964,1): warning C4273: 'getopt_long_only_w': inconsistent dll linkage
-C:\Users\freya\Source\Repos\catheter\BasicCatheter\GetOptLibrary\getopt.h(115,25): message : see previous definition of 'getopt_long_only_w'
+C:\Users\freya\source\repos\catheter\BasicCatheter\GetOptLibrary\getopt.cpp(51,14): warning C4273: 'optind': inconsistent dll linkage
+C:\Users\freya\source\repos\catheter\BasicCatheter\GetOptLibrary\getopt.h(87,25): message : see previous definition of 'optind'
+C:\Users\freya\source\repos\catheter\BasicCatheter\GetOptLibrary\getopt.cpp(52,14): warning C4273: 'opterr': inconsistent dll linkage
+C:\Users\freya\source\repos\catheter\BasicCatheter\GetOptLibrary\getopt.h(88,25): message : see previous definition of 'opterr'
+C:\Users\freya\source\repos\catheter\BasicCatheter\GetOptLibrary\getopt.cpp(53,14): warning C4273: 'optopt': inconsistent dll linkage
+C:\Users\freya\source\repos\catheter\BasicCatheter\GetOptLibrary\getopt.h(89,25): message : see previous definition of 'optopt'
+C:\Users\freya\source\repos\catheter\BasicCatheter\GetOptLibrary\getopt.cpp(75,15): warning C4273: 'optarg_a': inconsistent dll linkage
+C:\Users\freya\source\repos\catheter\BasicCatheter\GetOptLibrary\getopt.h(99,27): message : see previous definition of 'optarg_a'
+C:\Users\freya\source\repos\catheter\BasicCatheter\GetOptLibrary\getopt.cpp(496,1): warning C4273: 'getopt_a': inconsistent dll linkage
+C:\Users\freya\source\repos\catheter\BasicCatheter\GetOptLibrary\getopt.h(100,25): message : see previous definition of 'getopt_a'
+C:\Users\freya\source\repos\catheter\BasicCatheter\GetOptLibrary\getopt.cpp(500,1): warning C4273: 'getopt_long_a': inconsistent dll linkage
+C:\Users\freya\source\repos\catheter\BasicCatheter\GetOptLibrary\getopt.h(101,25): message : see previous definition of 'getopt_long_a'
+C:\Users\freya\source\repos\catheter\BasicCatheter\GetOptLibrary\getopt.cpp(504,1): warning C4273: 'getopt_long_only_a': inconsistent dll linkage
+C:\Users\freya\source\repos\catheter\BasicCatheter\GetOptLibrary\getopt.h(102,25): message : see previous definition of 'getopt_long_only_a'
+C:\Users\freya\source\repos\catheter\BasicCatheter\GetOptLibrary\getopt.cpp(535,18): warning C4273: 'optarg_w': inconsistent dll linkage
+C:\Users\freya\source\repos\catheter\BasicCatheter\GetOptLibrary\getopt.h(112,30): message : see previous definition of 'optarg_w'
+C:\Users\freya\source\repos\catheter\BasicCatheter\GetOptLibrary\getopt.cpp(956,1): warning C4273: 'getopt_w': inconsistent dll linkage
+C:\Users\freya\source\repos\catheter\BasicCatheter\GetOptLibrary\getopt.h(113,25): message : see previous definition of 'getopt_w'
+C:\Users\freya\source\repos\catheter\BasicCatheter\GetOptLibrary\getopt.cpp(960,1): warning C4273: 'getopt_long_w': inconsistent dll linkage
+C:\Users\freya\source\repos\catheter\BasicCatheter\GetOptLibrary\getopt.h(114,25): message : see previous definition of 'getopt_long_w'
+C:\Users\freya\source\repos\catheter\BasicCatheter\GetOptLibrary\getopt.cpp(964,1): warning C4273: 'getopt_long_only_w': inconsistent dll linkage
+C:\Users\freya\source\repos\catheter\BasicCatheter\GetOptLibrary\getopt.h(115,25): message : see previous definition of 'getopt_long_only_w'
      Creating library C:\Users\freya\Source\Repos\catheter\BasicCatheter\Debug\GetOptLibrary.lib and object C:\Users\freya\Source\Repos\catheter\BasicCatheter\Debug\GetOptLibrary.exp
   GetOptLibrary.vcxproj -> C:\Users\freya\Source\Repos\catheter\BasicCatheter\Debug\GetOptLibrary.dll

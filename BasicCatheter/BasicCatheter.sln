@@ -1,13 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28010.2026
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30204.135
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BasicCatheter", "BasicCatheter\BasicCatheter.vcxproj", "{2C87AD04-3F64-412A-A869-5748020BF681}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GetOptLibrary", "GetOptLibrary\GetOptLibrary.vcxproj", "{23AD2E82-B50C-4BF7-BF97-4E127E44410C}"
 EndProject
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "visualise", "visualise\visualise.pyproj", "{5DF84148-1B4F-422B-A3E7-2C4EF1548E82}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ExploringCatheter", "ExploringCatheter\ExploringCatheter.vcxproj", "{50529874-03BF-4634-88A8-1AB6EF73A08E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,16 @@ Global
 		{5DF84148-1B4F-422B-A3E7-2C4EF1548E82}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5DF84148-1B4F-422B-A3E7-2C4EF1548E82}.Release|x64.ActiveCfg = Release|Any CPU
 		{5DF84148-1B4F-422B-A3E7-2C4EF1548E82}.Release|x86.ActiveCfg = Release|Any CPU
+		{50529874-03BF-4634-88A8-1AB6EF73A08E}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{50529874-03BF-4634-88A8-1AB6EF73A08E}.Debug|x64.ActiveCfg = Debug|x64
+		{50529874-03BF-4634-88A8-1AB6EF73A08E}.Debug|x64.Build.0 = Debug|x64
+		{50529874-03BF-4634-88A8-1AB6EF73A08E}.Debug|x86.ActiveCfg = Debug|Win32
+		{50529874-03BF-4634-88A8-1AB6EF73A08E}.Debug|x86.Build.0 = Debug|Win32
+		{50529874-03BF-4634-88A8-1AB6EF73A08E}.Release|Any CPU.ActiveCfg = Release|Win32
+		{50529874-03BF-4634-88A8-1AB6EF73A08E}.Release|x64.ActiveCfg = Release|x64
+		{50529874-03BF-4634-88A8-1AB6EF73A08E}.Release|x64.Build.0 = Release|x64
+		{50529874-03BF-4634-88A8-1AB6EF73A08E}.Release|x86.ActiveCfg = Release|Win32
+		{50529874-03BF-4634-88A8-1AB6EF73A08E}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
