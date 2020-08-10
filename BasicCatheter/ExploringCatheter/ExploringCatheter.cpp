@@ -12,7 +12,7 @@ int main() {
 
 	// Parameter being explored
 	// dilution rate: physically relevant range is from 25/6 mm^3 s^-1 to 2500/6 mm^3 s^-1
-	double urine_rates[6] = { 5,10,20,30,40,50 };
+	double urine_rates[6] = { 5,7,10,12,15,20 };
 
 	// Define variables (bar exploration variable)
 	double diffusivity = 1e-2; // diffusivity of bacteria on catheter, in mm^2/s
@@ -39,7 +39,7 @@ int main() {
 	int print_interval = 3600; // Time interval at which to output data (s)
 	double catheter_external_radius = catheter_radius;// +1.0; // External catheter radius in mm
 	double attachment_rate = 4 * 3.14 * diffusivity * 1e-3; // Rate at which a bacterium in contact sticks (s^-1) Smoluchowski - 4 pi D sigma
-	double detachment_rate = 0.05; // Rate at which a bacterium in contact detaches (s^-1)
+	double detachment_rate = growth_rate1; // Rate at which a bacterium in contact detaches (s^-1)
 
 	// Loop over exploration variable
 	for (int i=0; i < sizeof(urine_rates)/sizeof(double); i++) {

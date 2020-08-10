@@ -1,9 +1,3 @@
-﻿  pch.cpp
-  BasicCatheter.cpp
+﻿  BasicCatheter.cpp
   Importing getopt library
-  BasicParameters.cpp
-  Catheter.cpp
-  Integrate.cpp
-  PDE.cpp
-  Generating Code...
   BasicCatheter.vcxproj -> C:\Users\freya\Source\Repos\catheter\BasicCatheter\Debug\BasicCatheter.exe
