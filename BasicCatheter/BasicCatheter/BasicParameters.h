@@ -3,6 +3,7 @@ class BasicParameters // Parameters defining the physics of the problem
 {
 public:
 	double diffusivity; // Diffusivity of bacteria
+	double surface_diffusivity; // Diffusivity of bacteria on catheter surface
 	double growth_rate1; // Growth rate on outside of catheter
 	double carrying_capacity1; // Carrying capacity in bladder
 	double growth_rate2; // Growth rate in bladder
@@ -22,8 +23,8 @@ public:
 	double detachment_rate = 1.0; // Rate at which bacteria in contact detach
 
 	BasicParameters();
-	BasicParameters(double diffusivity, double growth_rate1,
-		double carrying_capacity1, double growth_rate2,
+	BasicParameters(double diffusivity, double surface_diffusivity, 
+		double growth_rate1, double carrying_capacity1, double growth_rate2,
 		double carrying_capacity2, double growth_rate3,
 		double carrying_capacity3, double urine_rate,
 		double catheter_radius, double external_catheter_radius, 
