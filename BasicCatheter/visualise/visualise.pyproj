@@ -23,7 +23,16 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="exploring.py">
+    <Compile Include="catheter_length.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="initial_conditions.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="sump_volumes.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="urine_rates.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="visualise.py" />

@@ -9,13 +9,21 @@
 int main() {
 	// File root for saving
 	std::string file_root = "results/urine_rates/";
+	//std::string file_root = "results/catheter_lengths/";
+	//std::string file_root = "results/sump_volumes/";
 
 	// Parameter being explored
 	// dilution rate: physically relevant range is from 25/6 mm^3 s^-1 to 2500/6 mm^3 s^-1
-	double urine_rates[6] = { 5,7,10,12,15,20 };
+	//double urine_rates[17] = { 5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,25 };
+	//double urine_rates[3] = { 18.5,19,19.5 };
+	//double urine_rates[6] = { 20,21,22,23,24,25 };
+	double urine_rates[6] = { 27.5,30,32.5,35,37.5,40 };
+	//double catheter_lengths[9] = { 40,60,80,100,120,140,160,180,200 };
+	//double sump_volumes[17] = { 1e3,5e3,1e4,2e4,3e4,4e4,5e4,6e4,7e4,8e4,9e4,1e5,2e5,3e5,4e5,5e5,1e6 };
 
 	// Define variables (bar exploration variable)
 	double diffusivity = 1e-2; // diffusivity of bacteria on catheter, in mm^2/s
+	double surface_diffusivity = 4e-4; // diffusivity of bacteria on catheter, in mm^2/s
 	double growth_rate1 = std::log(2.0) / 3600.0; // Growth rate of bacteria on outside of catheter, per s
 	double carrying_capacity1 = 1e6; // Carrying capacity of bacteria on outside of catheter, per mm^2
 	double growth_rate2 = std::log(2.0) / 1800.0; // Growth rate of bacteria in bladder, per s
@@ -33,7 +41,7 @@ int main() {
 	int x_len = 11;// 101; // Number of x points
 	int r_len = 11; // Number of r points
 	double initial_skin_conc = 1e2; // Concentration of bacteria on the skin at time of catheter insertion
-	double lambda = 1.0 / catheter_length; // Scale factor for exponential distributions
+	//double lambda = 1.0 / catheter_length; // Scale factor for exponential distributions
 	int simulation_length = 86400 * 2; // Timeframe of simulation, in s
 	double dt = 0.05; // Time step
 	int print_interval = 3600; // Time interval at which to output data (s)
@@ -42,13 +50,21 @@ int main() {
 	double detachment_rate = growth_rate1; // Rate at which a bacterium in contact detaches (s^-1)
 
 	// Loop over exploration variable
-	for (int i=0; i < sizeof(urine_rates)/sizeof(double); i++) {
+	//for (int i=0; i < sizeof(urine_rates)/sizeof(double); i++) {
+	//for (int i = 0; i < sizeof(catheter_lengths) / sizeof(double); i++) {
+	//for (int i = 0; i < sizeof(sump_volumes) / sizeof(double); i++) {
+	for (int i = 23; i < 23+sizeof(urine_rates) / sizeof(double); i++) {
+		//simulation_length = simulation_length + 21600;
+
 		// Set exploration parameter value
-		double urine_rate = urine_rates[i];
+		double urine_rate = urine_rates[i-23];
+		//double catheter_length = catheter_lengths[i];
+		//double sump_volume = sump_volumes[i];
 		// Open file
 		std::ofstream results_file; // File for output to be written to 
 		// Kind of silly work around to cast i to str type
 		std::ostringstream ss;
+		if (i < 10) { ss << 0; }
 		ss << i;
 		std::string file_name = file_root + ss.str() + ".csv";
 		std::cout << file_name << std::endl;
@@ -58,19 +74,19 @@ int main() {
 			break;
 		}
 		// Set up catheter
-		BasicParameters myParam = BasicParameters(diffusivity, growth_rate1, // Parameters needed to solve the PDE problem
+		BasicParameters myParam = BasicParameters(diffusivity, surface_diffusivity, growth_rate1, // Parameters needed to solve the PDE problem
 			carrying_capacity1, growth_rate2, carrying_capacity2, growth_rate3,
 			carrying_capacity3, urine_rate, catheter_radius, catheter_external_radius, stickiness,
 			sump_volume, catheter_length, attachment_rate, detachment_rate);
 		Catheter myCatheter = Catheter(skin_concentration, bag_concentration, x_len, r_len); // Current state of catheter
 		PDE myPDE = PDE(&myParam, &myCatheter, simulation_length, dt, print_interval);
 		// Run simulation
-		results_file << "simulation length,time step,print interval,diffusivity,outside growth rate,"
+		results_file << "simulation length,time step,print interval,diffusivity,surface diffusivity,outside growth rate,"
 			<< "outside carrying capacity,bladder growth rate,bladder carrying capacity," <<
 			"inside growth rate,inside carrying capacity,urine rate,catheter radius,external catheter radius,stickiness,sump volume,"
 			<< "catheter length,initial condition,num of x steps,skin concentration," <<
 			"drainage bag concentration,attachment rate,detachment rate" << "\n";
-		results_file << simulation_length << "," << dt << "," << print_interval << "," << diffusivity <<
+		results_file << simulation_length << "," << dt << "," << print_interval << "," << diffusivity << "," << surface_diffusivity <<
 			"," << growth_rate1 << "," << carrying_capacity1 << "," << growth_rate2 << "," <<
 			carrying_capacity2 << "," << growth_rate3 << "," << carrying_capacity3 << "," << urine_rate << "," <<
 			catheter_radius << "," << catheter_external_radius << "," << stickiness << "," << sump_volume << "," << catheter_length <<

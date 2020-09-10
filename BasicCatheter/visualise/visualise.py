@@ -8,6 +8,7 @@ from textwrap import wrap
 
 # Location of data file
 file = '../BasicCatheter/results.csv'
+#file = '../ExploringCatheter/results/urine_rates/16.csv'
 
 
 # Read data into pandas dataframe
@@ -205,6 +206,7 @@ ax_iwf.set_ylabel('Distance from catheter tip (mm)')
 ax_iwf.set_title('Wavefront inside')
 ax_iwf.legend(loc='upper right')
 
+plt.show()
 
 fig2 = plt.figure()
 #time, bladder, outflow
@@ -236,4 +238,4 @@ plt.xlabel('Bacterial concentration (mm$^{-2}$)')
 plt.ylabel('Lagtime between bladder and outflow')
 # How do I ensure these are always the same length?
 
-plt.show()
+#plt.show()
