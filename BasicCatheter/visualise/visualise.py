@@ -7,8 +7,9 @@ import seaborn as sns
 from textwrap import wrap
 
 # Location of data file
-file = '../BasicCatheter/results.csv'
-#file = '../ExploringCatheter/results/urine_rates/16.csv'
+#file = '../BasicCatheter/results.csv'
+file = '../ExploringCatheter/results/urine_rates/15.csv'
+#file = "../ExploringCatheter/results/catheter_lengths/00.csv"
 
 
 # Read data into pandas dataframe

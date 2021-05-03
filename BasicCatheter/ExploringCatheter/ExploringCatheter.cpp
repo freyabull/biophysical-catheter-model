@@ -14,10 +14,10 @@ int main() {
 
 	// Parameter being explored
 	// dilution rate: physically relevant range is from 25/6 mm^3 s^-1 to 2500/6 mm^3 s^-1
-	//double urine_rates[17] = { 5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,25 };
-	//double urine_rates[3] = { 18.5,19,19.5 };
+	//double urine_rates[14] = { 5,6,7,8,9,10,11,12,13,14,15,16,17,18};
+	double urine_rates[3] = { 18,18.5,19 };// , 19.5};
 	//double urine_rates[6] = { 20,21,22,23,24,25 };
-	double urine_rates[6] = { 27.5,30,32.5,35,37.5,40 };
+	//double urine_rates[6] = {27.5,30,32.5,35,37.5,40 };
 	//double catheter_lengths[9] = { 40,60,80,100,120,140,160,180,200 };
 	//double sump_volumes[17] = { 1e3,5e3,1e4,2e4,3e4,4e4,5e4,6e4,7e4,8e4,9e4,1e5,2e5,3e5,4e5,5e5,1e6 };
 
@@ -41,23 +41,20 @@ int main() {
 	int x_len = 11;// 101; // Number of x points
 	int r_len = 11; // Number of r points
 	double initial_skin_conc = 1e2; // Concentration of bacteria on the skin at time of catheter insertion
-	//double lambda = 1.0 / catheter_length; // Scale factor for exponential distributions
-	int simulation_length = 86400 * 2; // Timeframe of simulation, in s
-	double dt = 0.05; // Time step
-	int print_interval = 3600; // Time interval at which to output data (s)
+	int simulation_length = 86400 * 30; // Timeframe of simulation, in s
+	double dt = 0.1; // Time step
+	int print_interval = 600; // Time interval at which to output data (s)
 	double catheter_external_radius = catheter_radius;// +1.0; // External catheter radius in mm
 	double attachment_rate = 4 * 3.14 * diffusivity * 1e-3; // Rate at which a bacterium in contact sticks (s^-1) Smoluchowski - 4 pi D sigma
 	double detachment_rate = growth_rate1; // Rate at which a bacterium in contact detaches (s^-1)
 
 	// Loop over exploration variable
-	//for (int i=0; i < sizeof(urine_rates)/sizeof(double); i++) {
+	for (int i=13; i < 13+sizeof(urine_rates)/sizeof(double); i++) {
 	//for (int i = 0; i < sizeof(catheter_lengths) / sizeof(double); i++) {
 	//for (int i = 0; i < sizeof(sump_volumes) / sizeof(double); i++) {
-	for (int i = 23; i < 23+sizeof(urine_rates) / sizeof(double); i++) {
-		//simulation_length = simulation_length + 21600;
 
 		// Set exploration parameter value
-		double urine_rate = urine_rates[i-23];
+		double urine_rate = urine_rates[i-13];
 		//double catheter_length = catheter_lengths[i];
 		//double sump_volume = sump_volumes[i];
 		// Open file

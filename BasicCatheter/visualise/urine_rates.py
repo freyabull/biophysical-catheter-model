@@ -8,7 +8,6 @@ import os
 from matplotlib.font_manager import FontProperties
 
 # Graphics settings
-#plt.rcParams["figure.figsize"] = (11/2.54,8/2.54)
 plt.rcParams["figure.figsize"] = (3.1,3.1)
 plt.rcParams['xtick.major.pad']='4'
 plt.rcParams['ytick.major.pad']='4'
@@ -96,32 +95,38 @@ sub_ax.plot(urine_rates, time_to_max,zorder=2)
 sub_ax.axvline(50/3, color=palette[2], ls='--',zorder=1)
 sub_ax.set_xlabel("Flow rate (mm$^3$s$^{-1}$)", fontproperties=font, labelpad=2,position=(0.355,0))
 sub_ax.set_ylabel("Time to steady \n state (hr)", fontproperties=font, labelpad=2,position=(0,0.48))
-plt.tight_layout(rect=[-0.045,-0.05,1.035,1.035])
-plt.savefig('urine_rate_phases.pdf')
+plt.tight_layout(rect=[-0.05,-0.055,1.04,1.04])
+plt.savefig('urine_rate_phases.svg')
+
+plt.rcParams["figure.figsize"] = (1.55,1.55)
 
 plt.figure()
-plt.scatter(urine_rates,time_to_block)
+#plt.plot(urine_rates, times) # Graph timescale to clinical infection at outlet against urine rate
+plt.scatter(urine_rates,[time[0] for time in times], label='10$^3$ mm$^{{-3}}$',s=4)
+plt.scatter(urine_rates,[time[1] for time in times], label='10$^5$ mm$^{{-3}}$',s=4)
+plt.scatter(urine_rates,[time[2] for time in times], label='10$^{7}$ mm$^{{-3}}$',s=4)
 sns.despine()
-plt.locator_params(tight=True, nbins=4)
 plt.xticks(fontproperties=font)
 plt.yticks(fontproperties=font)
-plt.xlabel("Urine flow rate (mm$^3$s$^{-1}$)", fontproperties=font, labelpad=2)
-plt.ylabel('Time taken to internal blockage (hr)', fontproperties=font, labelpad=2)
-plt.tight_layout(rect=[-0.04,-0.06,1.035,1.035])
+plt.xlabel("Urine rate (mm$^3$s$^{-1}$)", fontproperties=font, labelpad=1.5, position=(0.5,0))
+plt.ylabel("Time to detection (hr)", fontproperties=font, labelpad=2,position=(0,0.48))
+#plt.legend(prop=font, title='Test sensivity \n(cells per mm$^{{-3}}$)')
+#legend_title_props = plt.gca().get_legend().get_title()
+#legend_title_props.set_name('serif')
+#legend_title_props.set_size(8)
+plt.tight_layout(rect=[-0.092,-0.113,1.097,1.09])
+plt.savefig('urine_rate_detection.svg')
+
 
 plt.figure()
-plt.plot(urine_rates, times) # Graph timescale to clinical infection at outlet against urine rate
-plt.scatter(urine_rates,[time[0] for time in times], label='10$^3$ mm$^{{-3}}$')
-plt.scatter(urine_rates,[time[1] for time in times], label='10$^5$ mm$^{{-3}}$')
-plt.scatter(urine_rates,[time[2] for time in times], label='10$^7$ mm$^{{-3}}$')
+plt.scatter(urine_rates,time_to_block,s=4)
+sns.despine()
+plt.locator_params(tight=True, nbins=3)
 plt.xticks(fontproperties=font)
 plt.yticks(fontproperties=font)
-plt.xlabel("Urine flow rate (mm s$^{-1}$", fontproperties=font, labelpad=2)
-plt.ylabel("Time to detection (hr)", fontproperties=font, labelpad=2)
-plt.legend(prop=font, title='Bacterial density')
-legend_title_props = plt.gca().get_legend().get_title()
-legend_title_props.set_name('serif')
-legend_title_props.set_size(8)
-plt.tight_layout(rect=[-0.04,-0.04,1.035,1.035])
+plt.xlabel("Urine rate (mm$^3$s$^{-1}$)", fontproperties=font, labelpad=1.5, position=(0.52,0))
+plt.ylabel('Time to blockage (hr)', fontproperties=font, labelpad=2, position=(0,0.49))
+plt.tight_layout(rect=[-0.091,-0.113,1.096,1.086])
+plt.savefig('urine_rate_blockage.svg')
 
 plt.show()

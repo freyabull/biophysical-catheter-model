@@ -8,18 +8,18 @@ import os
 from matplotlib.font_manager import FontProperties
 
 # Graphics settings
-#plt.rcParams["figure.figsize"] = (11/2.54,8/2.54)
-plt.rcParams["figure.figsize"] = (3.1,3.1)
+plt.rcParams["figure.figsize"] = (1.55,1.55)
 plt.rcParams['xtick.major.pad']='4'
 plt.rcParams['ytick.major.pad']='4'
 font = FontProperties()
-#font.set_name('sans-serif')
 font.set_name('serif')
 font.set_size(8)
 colours = np.array([(68,120,33), (141,211,95), (255,179,128), (255,221,85), (179,179,179)])/255
 palette = sns.color_palette(colours)
 sns.set_palette(palette)
 sns.set_style("ticks")
+plt.rcParams['font.size'] = 8.0
+plt.rcParams['font.family'] = 'serif'
 
 
 # Location of results files
@@ -57,16 +57,16 @@ for i in range(N):
     index = np.searchsorted(maxy,thresh, side='right')
     times[i] = dt*index if index!=t_len else np.nan
 
-plt.scatter(sump_volumes,times)
+plt.scatter(sump_volumes,times,s=4)
 sns.despine()
 plt.xscale('log')
 plt.locator_params(axis='x',tight=True, numticks=4)
 plt.locator_params(axis='y',tight=True, nbins=4)
-plt.xticks(fontproperties=font)
-plt.yticks(fontproperties=font)
-plt.xlabel('Volume of residual urine (mm$^3$)', fontproperties=font, labelpad=2)
-plt.ylabel('Time taken to internal blockage (hr)', fontproperties=font, labelpad=2)
-plt.tight_layout(rect=[-0.04,-0.06,1.035,1.035])
+#plt.xticks(fontproperties=font)
+#plt.yticks(fontproperties=font)
+plt.xlabel('Urine volume (mm$^3$)', fontproperties=font, labelpad=1.5)
+plt.ylabel('Time to blockage (hr)', fontproperties=font, labelpad=2,position=(0,0.41))
+plt.tight_layout(rect=[-0.074,-0.112,1.085,1.07])
 plt.savefig('sump_volumes_blockages.pdf')
 plt.show()
 
