@@ -69,7 +69,7 @@ void PDE::solve()
 					record(i);
 				}
 				step_bc_skin_contamination();
-				step_bc_skin_clean();
+				step_bc_drainage_clean();
 				step();
 			}
 		}
@@ -90,7 +90,6 @@ void PDE::solve()
 		}
 	}
 }
-
 
 void PDE::solve(std::ofstream &file)
 {
@@ -345,6 +344,8 @@ void PDE::initialize()
 	f9 = param->diffusivity * dt/ dr; 
 	of1 = 4.0 * dr / R_square; 
 	of2 = 4.0 * dr * dr_square / (R_square * R_square); 
+	h = param->urine_rate / (27 * 3.14 * param->viscosity);
+	cj = 0.5835 * param->diffusivity * std::cbrt(param->urine_rate / (std::pow(param->catheter_radius, 3) * param->diffusivity));
 }
 
 void PDE::stability_check()
@@ -358,5 +359,232 @@ void PDE::stability_check()
 	{
 		std::cout << "( D dt / dr^2  = " << f1 << " ) + (u dt / dx = " << f7b << " ) > 0.5, simulation unstable \n";
 		exit(EXIT_FAILURE);
+	}
+}
+
+double PDE::deposition(double x) {
+	// Check if within the hydrodynamic inlet region
+	if (x < h) {
+		// To stay finite, return the deposition rate as calculated at h
+		return cj * data->bladder / std::cbrt(h);
+	}
+	else {
+		// Return the deposition rate at location x
+		return cj * data->bladder / std::cbrt(x);
+	}
+}
+
+void PDE::step_light()
+{
+	for (int j = 1; j < x_len - 1; ++j) // Longitudinal index
+	{
+		// Fisher wave equation for outside of catheter
+		/* new[j] = n[j] + dt * (r * n[j] * (1-n[j]/kappa)
+					+ D / dx^2 * (n[j+1] - 2n[j] + n[j-1]) )
+		*/
+		data->outside[j] = o1 * (data->old_outside[j + 1]
+			+ data->old_outside[j - 1]) + data->old_outside[j]
+			* (o2 - o3 * data->old_outside[j]);
+		// Fisher wave equation for inside of catheter with source term from flow
+		/* new[j] = n[j] + dt * (r * n[j] * (1-n[j]/kappa)
+					+  D / dx^2 * (n[j+1] - 2*n[j] + n[j-1]) + source)
+		   where source = j(x) the analytic solution for the flux
+		*/
+		data->inside[j] = i1 * (data->old_inside[j + 1]
+			+ data->old_inside[j - 1]) + data->old_inside[j] * (i2 - i3
+				* data->old_inside[j]) + dt * deposition(j * dx);
+		
+	}
+
+	// Boundary condition for top of catheter (diffusion into bladder)
+	// Top of outside. Diffusion into inside & coupling with bladder
+	data->outside[x_len - 1] = o1 * data->old_outside[x_len - 2]
+		+ o4 * data->bladder + coi * data->old_inside[0]
+		+ data->old_outside[x_len - 1] * (o5 - o3 * data->old_outside[x_len - 1]);
+
+	// Boundary conditions. Diffusion across from bladder to inside
+	// Top of inside. Diffusion across from outside
+	data->inside[0] = i1 * data->old_inside[1]
+		+ coi * data->old_outside[x_len - 1] + data->old_inside[0]
+		* (i2 - i3 * data->old_inside[0]) + dt * deposition(0.0);
+
+	// Bladder is a well-mixed volume with coupling to catheter outside
+	data->bladder = data->bladder * (b1 - b2 * data->bladder)
+		+ b3 * data->old_outside[x_len - 1];
+
+	// Update old data
+	data->update();
+}
+
+void PDE::step_bc_drainage_clean_light()
+{
+	//  No external contamination, boundary condition: no flux.
+	data->inside[x_len - 1] = i1 * (2.0 * data->old_inside[x_len - 2])
+		+ data->old_inside[x_len - 1] * (i2 - i3 * data->old_inside[x_len - 1])
+		+ dt * deposition((x_len - 1) * dx);
+}
+
+void PDE::step_bc_drainage_contamination_light()
+{
+	//  External contamination boundary condition: fixed boundary.
+	data->inside[x_len - 1] = i1 * (data->old_inside[x_len - 2]
+		+ data->bag_concentration) + data->old_inside[x_len - 1]
+		* (i2 - i3 * data->old_inside[x_len - 1])
+		+ dt * deposition((x_len - 1) * dx);
+}
+
+void PDE::solve_light()
+{
+	std::cout << "Skin concentration is: " << data->skin_concentration << " and bag concentration is: " << data->bag_concentration << std::endl;
+	// Check if there is external contamination from the skin
+	if (data->skin_concentration < 0)
+	{
+		// Check if there is external contamination from drainage bag
+		if (data->bag_concentration < 0)
+		{
+			std::cout << "No contaminants" << std::endl;
+			// No contaminants
+			for (int i = 0; i < N; ++i) // Time index
+			{
+				if (i % print_step == 0)
+				{
+					record(i);
+				}
+				step_bc_skin_clean();
+				step_bc_drainage_clean_light();
+				step_light();
+			}
+		}
+		else
+		{
+			std::cout << "Only drainage bag contaminates" << std::endl;
+			// Drainage bag contaminates only
+			for (int i = 0; i < N; ++i) // Time index
+			{
+				if (i % print_step == 0)
+				{
+					record(i);
+				}
+				step_bc_skin_clean();
+				step_bc_drainage_contamination_light();
+				step_light();
+			}
+		}
+	}
+	else
+	{
+		// Check if there is external contamination from the drainage bag
+		if (data->bag_concentration < 0)
+		{
+			std::cout << "Only skin contaminates" << std::endl;
+			// Skin contamination only
+			for (int i = 0; i < N; ++i) // Time index
+			{
+				if (i % print_step == 0)
+				{
+					record(i);
+				}
+				step_bc_skin_contamination();
+				step_bc_drainage_clean_light();
+				step_light();
+			}
+		}
+		else
+		{
+			std::cout << "Both skin and drainage contaminates" << std::endl;
+			// Both bag and skin contamination
+			for (int i = 0; i < N; ++i) // Time index
+			{
+				if (i % print_step == 0)
+				{
+					record(i);
+				}
+				step_bc_skin_contamination();
+				step_bc_drainage_contamination_light();
+				step_light();
+			}
+		}
+	}
+}
+
+void PDE::solve_light(std::ofstream& file)
+{
+	clock_t start_step = clock();
+	// Check if there is external contamination from the skin
+	if (data->skin_concentration < 0)
+	{
+		// Check if there is external contamination from drainage bag
+		if (data->bag_concentration < 0)
+		{
+			// No contaminants
+			for (int i = 0; i < N; ++i) // Time index
+			{
+				if (i % print_step == 0)
+				{
+					record(i, file);
+					clock_t end_step = clock();
+					std::cout << "Step time " << double(end_step - start_step) / CLOCKS_PER_SEC << std::endl;
+					start_step = clock();
+				}
+				step_bc_skin_clean();
+				step_bc_drainage_clean_light();
+				step_light();
+			}
+		}
+		else
+		{
+			// Drainage bag contaminates only 
+			for (int i = 0; i < N; ++i) // Time index
+			{
+				if (i % print_step == 0)
+				{
+					record(i, file);
+					clock_t end_step = clock();
+					std::cout << "Step time " << double(end_step - start_step) / CLOCKS_PER_SEC << std::endl;
+					start_step = clock();
+				}
+				step_bc_skin_clean();
+				step_bc_drainage_contamination_light();
+				step_light();
+			}
+		}
+	}
+	else
+	{
+		// Check if there is external contamination from the drainage bag
+		if (data->bag_concentration < 0)
+		{
+			// Skin contamination only 
+			for (int i = 0; i < N; ++i) // Time index
+			{
+				if (i % print_step == 0)
+				{
+					record(i, file);
+					clock_t end_step = clock();
+					std::cout << "Step time " << double(end_step - start_step) / CLOCKS_PER_SEC << std::endl;
+					start_step = clock();
+				}
+				step_bc_skin_contamination();
+				step_bc_drainage_clean_light();
+				step_light();
+			}
+		}
+		else
+		{
+			// Both bag and skin contamination
+			for (int i = 0; i < N; ++i) // Time index
+			{
+				if (i % print_step == 0)
+				{
+					record(i, file);
+					clock_t end_step = clock();
+					std::cout << "Step time " << double(end_step - start_step) / CLOCKS_PER_SEC << std::endl;
+					start_step = clock();
+				}
+				step_bc_skin_contamination();
+				step_bc_drainage_contamination_light();
+				step_light();
+			}
+		}
 	}
 }

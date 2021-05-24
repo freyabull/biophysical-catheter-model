@@ -6,6 +6,7 @@
 #include <fstream>
 #include "Integrate.h"
 #include <vector>
+#include <time.h>
 
 class PDE // Methods for solving the pde problem
 {
@@ -28,6 +29,10 @@ public:
 	void solve();
 	// Solve the model for the parameters set. Writes output to file
 	void solve(std::ofstream &file); 
+	// Solve the model but light-weight, using analytic approximation for deposition rate, not calculating internal flow. Writes output to console.
+	void solve_light();
+	// Solve the model but light-weight, using analytic approximation for deposition rate, not calculating internal flow. Writes output to file.
+	void solve_light(std::ofstream& file);
 
 private:
 	int N; // Number of time steps
@@ -54,6 +59,8 @@ private:
 	double f9; // Constant for inside flow : D dt / dr
 	double of1; // Constant for calculation of outflow density : 4 dr / R^2
 	double of2; // Constant for calculation of outflow density : 4 dr^3 / R^4
+	double h; // Hydrodynamic inlet boundary region
+	double cj; // Constant for the analytic deposition rate
 	// Solve for current time-step using explicit methods
 	void step(); 
 	// Case for no external contamination (skin_concentration < 0)
@@ -74,5 +81,13 @@ private:
 	void initialize(); 
 	// Check for numerical stability
 	void stability_check();
+	// Calculate analytic deposition rate
+	double deposition(double x);
+	// Solve for current time-step using explicit methods with the analytic approximation for the deposition rate
+	void step_light();
+	// Case for no drainage contamination (bag_concentration < 0) with the analytic approximation for the deposition rate
+	void step_bc_drainage_clean_light();
+	// Case for drainage contamination (bag_concentration > 0) with the analytic approximation for the deposition rate
+	void step_bc_drainage_contamination_light();
 };
 

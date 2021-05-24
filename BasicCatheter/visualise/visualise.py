@@ -7,8 +7,8 @@ import seaborn as sns
 from textwrap import wrap
 
 # Location of data file
-#file = '../BasicCatheter/results.csv'
-file = '../ExploringCatheter/results/urine_rates/15.csv'
+file = '../BasicCatheter/results_light.csv'
+#file = '../ExploringCatheter/results/urine_rates/15.csv'
 #file = "../ExploringCatheter/results/catheter_lengths/00.csv"
 
 
@@ -19,6 +19,9 @@ info = pd.read_csv(file,  nrows=1)
 
 #Extract data series from dataframe
 t_len = int(info['simulation length']/info['print interval']) # number of time steps
+#print('simulation length', info['simulation length'])
+#print('print interval', info['print interval'])
+#print('t_len', t_len)
 dt = float(info['print interval']/3600) # print interval (hrs)
 time = dt*np.array(range(0, t_len)) # time series
 

@@ -16,9 +16,7 @@ public:
 	double stickiness; // Probability of a bacterium sticking to wall if it comes in contact NOT IN USE
 	double sump_volume; // Volume of residual urine
 	double catheter_length; // Length of the catheter
-	//double coupling_o = 1.0; // Coupling strength between outside and bladder
-	//double coupling_i = 1.0; // Coupling strength between bladder and inside
-	//double coupling_oi = 1.0; // Coupling factor between outside and inside
+	double viscosity; // Urine viscosity
 	double attachment_rate = 1.0; // Rate at which bacteria in contact stick
 	double detachment_rate = 1.0; // Rate at which bacteria in contact detach
 
@@ -29,7 +27,7 @@ public:
 		double carrying_capacity3, double urine_rate,
 		double catheter_radius, double external_catheter_radius, 
 		double stickiness, double sump_volume, double catheter_length, 
-		double attachment_rate, double detachment_rate);
+		double viscosity, double attachment_rate, double detachment_rate);
 	~BasicParameters();
 };
 

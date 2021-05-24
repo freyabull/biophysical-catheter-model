@@ -47,6 +47,7 @@ int main() {
 	double catheter_external_radius = catheter_radius;// +1.0; // External catheter radius in mm
 	double attachment_rate = 4 * 3.14 * diffusivity * 1e-3; // Rate at which a bacterium in contact sticks (s^-1) Smoluchowski - 4 pi D sigma
 	double detachment_rate = growth_rate1; // Rate at which a bacterium in contact detaches (s^-1)
+	double viscosity = 0.83;
 
 	// Loop over exploration variable
 	for (int i=13; i < 13+sizeof(urine_rates)/sizeof(double); i++) {
@@ -74,7 +75,7 @@ int main() {
 		BasicParameters myParam = BasicParameters(diffusivity, surface_diffusivity, growth_rate1, // Parameters needed to solve the PDE problem
 			carrying_capacity1, growth_rate2, carrying_capacity2, growth_rate3,
 			carrying_capacity3, urine_rate, catheter_radius, catheter_external_radius, stickiness,
-			sump_volume, catheter_length, attachment_rate, detachment_rate);
+			sump_volume, catheter_length, viscosity, attachment_rate, detachment_rate);
 		Catheter myCatheter = Catheter(skin_concentration, bag_concentration, x_len, r_len); // Current state of catheter
 		PDE myPDE = PDE(&myParam, &myCatheter, simulation_length, dt, print_interval);
 		// Run simulation
@@ -82,13 +83,13 @@ int main() {
 			<< "outside carrying capacity,bladder growth rate,bladder carrying capacity," <<
 			"inside growth rate,inside carrying capacity,urine rate,catheter radius,external catheter radius,stickiness,sump volume,"
 			<< "catheter length,initial condition,num of x steps,skin concentration," <<
-			"drainage bag concentration,attachment rate,detachment rate" << "\n";
+			"drainage bag concentration,viscosity,attachment rate,detachment rate" << "\n";
 		results_file << simulation_length << "," << dt << "," << print_interval << "," << diffusivity << "," << surface_diffusivity <<
 			"," << growth_rate1 << "," << carrying_capacity1 << "," << growth_rate2 << "," <<
 			carrying_capacity2 << "," << growth_rate3 << "," << carrying_capacity3 << "," << urine_rate << "," <<
 			catheter_radius << "," << catheter_external_radius << "," << stickiness << "," << sump_volume << "," << catheter_length <<
 			"," << initial_condition << "," << x_len << "," << skin_concentration << "," <<
-			bag_concentration << "," << attachment_rate << "," << detachment_rate << "\n\n";
+			bag_concentration << "," << viscosity << "," << attachment_rate << "," << detachment_rate << "\n\n";
 		myPDE.solve(results_file);
 		// Close file
 		results_file.close();

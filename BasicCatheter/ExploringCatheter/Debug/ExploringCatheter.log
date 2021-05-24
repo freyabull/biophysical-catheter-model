@@ -1,2 +1,7 @@
-﻿  ExploringCatheter.cpp
+﻿  BasicParameters.cpp
+  Catheter.cpp
+  Integrate.cpp
+  PDE.cpp
+  ExploringCatheter.cpp
+  Generating Code...
   ExploringCatheter.vcxproj -> C:\Users\freya\Source\Repos\catheter\BasicCatheter\Debug\ExploringCatheter.exe
