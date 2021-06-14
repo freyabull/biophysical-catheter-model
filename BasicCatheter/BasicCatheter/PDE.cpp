@@ -268,16 +268,25 @@ void PDE::step_bc_drainage_contamination()
 
 void PDE::find_outflow_density()
 {
-	// Find output density (and error estimate)
-	std::vector<double> integrand;
-	for (int r = 0; r < r_len; r++) // radial index
-	{
-		double val = data->get_flow(x_len - 1, r) * (of1 * r - of2 * r * r * r);
-		integrand.push_back(val);
+	if (data->get_flow(x_len - 1, r_len - 1) - data->get_flow(x_len - 1, 0) > 1e-33) {
+		// Find output density (and error estimate) for full simulation
+		std::vector<double> integrand;
+		for (int r = 0; r < r_len; r++) // radial index
+		{
+			double val = data->get_flow(x_len - 1, r) * (of1 * r - of2 * r * r * r);
+			integrand.push_back(val);
+		}
+		Integrate1D::results result = Integrate1D::discrete_trapezoidal(integrand, 0.0, param->catheter_radius);
+		data->outflow = result.sol;
+		data->of_error = result.err;
 	}
-	Integrate1D::results result = Integrate1D::discrete_trapezoidal(integrand,0.0,param->catheter_radius);
-	data->outflow = result.sol;
-	data->of_error = result.err;
+	else {
+		// Find output density (and error estimate) for light simulation
+		// final density = bladder density - circumference * integral of deposition rate along catheter / urine flow rate
+		Integrate1D::results result = Integrate1D::trapezoidal(std::bind(&PDE::deposition, this, _1), 0.0, param->catheter_length);
+		data->outflow = data->bladder - 2 * 3.14 * param->external_catheter_radius* result.sol/param->urine_rate;
+		data->of_error = data->outflow*result.err/result.sol;
+	}
 }
 
 void PDE::record(int current_step)
@@ -310,7 +319,7 @@ void PDE::record(int current_step, std::ofstream &file)
 
 void PDE::initialize()
 {
-	double l = 1; // Length of bladder in contact with bladder
+	double l = 1; // Length of catheter in contact with bladder
 	double w = 5e-3; // Depth to which we consider the bladder volume in contact with the catheter
 	double S_c = 2 * 3.14 * param->external_catheter_radius * l; // Surface contact area
 	double V_c = 3.14 * (l + w) * (param->external_catheter_radius + w) // Contact volume
@@ -522,9 +531,9 @@ void PDE::solve_light(std::ofstream& file)
 				if (i % print_step == 0)
 				{
 					record(i, file);
-					clock_t end_step = clock();
+					/*clock_t end_step = clock();
 					std::cout << "Step time " << double(end_step - start_step) / CLOCKS_PER_SEC << std::endl;
-					start_step = clock();
+					start_step = clock();*/
 				}
 				step_bc_skin_clean();
 				step_bc_drainage_clean_light();
@@ -539,9 +548,9 @@ void PDE::solve_light(std::ofstream& file)
 				if (i % print_step == 0)
 				{
 					record(i, file);
-					clock_t end_step = clock();
+					/*clock_t end_step = clock();
 					std::cout << "Step time " << double(end_step - start_step) / CLOCKS_PER_SEC << std::endl;
-					start_step = clock();
+					start_step = clock();*/
 				}
 				step_bc_skin_clean();
 				step_bc_drainage_contamination_light();
@@ -560,9 +569,9 @@ void PDE::solve_light(std::ofstream& file)
 				if (i % print_step == 0)
 				{
 					record(i, file);
-					clock_t end_step = clock();
+					/*clock_t end_step = clock();
 					std::cout << "Step time " << double(end_step - start_step) / CLOCKS_PER_SEC << std::endl;
-					start_step = clock();
+					start_step = clock();*/
 				}
 				step_bc_skin_contamination();
 				step_bc_drainage_clean_light();
@@ -577,9 +586,9 @@ void PDE::solve_light(std::ofstream& file)
 				if (i % print_step == 0)
 				{
 					record(i, file);
-					clock_t end_step = clock();
+					/*clock_t end_step = clock();
 					std::cout << "Step time " << double(end_step - start_step) / CLOCKS_PER_SEC << std::endl;
-					start_step = clock();
+					start_step = clock();*/
 				}
 				step_bc_skin_contamination();
 				step_bc_drainage_contamination_light();

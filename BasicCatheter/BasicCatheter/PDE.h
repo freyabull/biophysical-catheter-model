@@ -7,6 +7,8 @@
 #include "Integrate.h"
 #include <vector>
 #include <time.h>
+#include <functional>
+using namespace std::placeholders;
 
 class PDE // Methods for solving the pde problem
 {

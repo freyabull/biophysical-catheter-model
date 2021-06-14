@@ -3,7 +3,7 @@
 #include "pch.h"
 #include "Integrate.h"
 
-Integrate1D::results Integrate1D::trapezoidal(double func(double), double a,
+Integrate1D::results Integrate1D::trapezoidal(std::function<double(double)> func, double a,
 	double b, int N)
 {
 	double dx = (b - a) / N; // Grid spacing

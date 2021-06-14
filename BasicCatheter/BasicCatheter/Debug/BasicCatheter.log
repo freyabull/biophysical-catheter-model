@@ -1,8 +1,5 @@
-﻿  pch.cpp
-  BasicCatheter.cpp
+﻿  BasicCatheter.cpp
   Importing getopt library
-  BasicParameters.cpp
-  Catheter.cpp
   Integrate.cpp
   PDE.cpp
   Generating Code...
