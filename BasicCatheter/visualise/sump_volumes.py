@@ -11,6 +11,8 @@ from matplotlib.font_manager import FontProperties
 plt.rcParams["figure.figsize"] = (1.55,1.55)
 plt.rcParams['xtick.major.pad']='4'
 plt.rcParams['ytick.major.pad']='4'
+plt.rcParams['font.family'] = 'serif'
+plt.rcParams['font.size'] = '8'
 font = FontProperties()
 font.set_name('serif')
 font.set_size(8)
@@ -32,7 +34,7 @@ sump_volumes = np.zeros(N)
 times = np.zeros(N)
 
 #  Threshold value for blockage
-thresh = 1e6
+thresh = 1e7
 
 
 # Open files and read in data
@@ -57,15 +59,15 @@ for i in range(N):
     index = np.searchsorted(maxy,thresh, side='right')
     times[i] = dt*index if index!=t_len else np.nan
 
-plt.scatter(sump_volumes,times,s=4)
+plt.scatter(sump_volumes[sump_volumes<=1e6],times[sump_volumes<=1e6],s=4)
 sns.despine()
 plt.xscale('log')
 plt.locator_params(axis='x',tight=True, numticks=4)
 plt.locator_params(axis='y',tight=True, nbins=4)
-#plt.xticks(fontproperties=font)
-#plt.yticks(fontproperties=font)
+plt.xticks(fontproperties=font)
+plt.yticks(fontproperties=font)
 plt.xlabel('Urine volume (mm$^3$)', fontproperties=font, labelpad=1.5)
-plt.ylabel('Time to blockage (hr)', fontproperties=font, labelpad=2,position=(0,0.41))
+plt.ylabel('Time to blockage (hr)', fontproperties=font, labelpad=2,position=(0,0.47))
 plt.tight_layout(rect=[-0.074,-0.112,1.085,1.07])
 plt.savefig('sump_volumes_blockages.pdf')
 plt.show()

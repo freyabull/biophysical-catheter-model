@@ -33,7 +33,7 @@ if reimport_data:
     files = os.listdir(folder)
 
     #  Threshold value for blockage
-    blockage_thresh = 1e6
+    blockage_thresh = 1e7
 
     # Arrays for results
     N = len(files)
@@ -95,10 +95,13 @@ fig, ax = plt.subplots()
 Xh=heatmap_frame.columns.values
 Yh=heatmap_frame.index.values
 Zh=heatmap_frame.values
-hm = ax.contourf(Xh,Yh,Zh,levels=5,cmap=cmappy)
+hm = ax.contourf(Xh,Yh,Zh,levels=6,cmap=cmappy)
 # Create a colour bar
 cbar = fig.colorbar(hm)
 cbar.ax.set_yticklabels(cbar.ax.get_yticklabels(), fontproperties=font)
+locator, formatter = cbar._get_ticker_locator_formatter()
+locator.set_params(nbins=4)
+cbar.update_ticks()
 plt.text(50,80,'Time to blockage (hours)',rotation=90,fontproperties=font)
 
 # Create contour map for bacterial density
@@ -130,6 +133,8 @@ plt.yticks(fontproperties=font)
 plt.xticks(fontproperties=font)
 plt.xlabel('Urine flow rate (mm$^3$s$^{-1}$)',fontproperties=font, labelpad=1.5)
 plt.ylabel('Catheter length (mm)',fontproperties=font, labelpad=2)
+plt.locator_params(axis='y',tight=True, nbins=4)
+plt.locator_params(axis='x',tight=True, nbins=4)
 plt.tight_layout(rect=[-0.035,-0.045,1.035,1.035])
 plt.savefig('phase_diagram.pdf')
 

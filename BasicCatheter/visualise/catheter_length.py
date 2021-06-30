@@ -26,7 +26,7 @@ folder = '../ExploringCatheter/results/catheter_lengths'
 files = os.listdir(folder)
 
 # interested in time taken to infection (at outflow) against catheter length
-infection_threshold = np.array([1e3,1e5,1e7]) # Clinical definition of infection occuring
+infection_threshold = np.array([1,1e2,1e4]) # Clinical definition of infection occuring
 
 # Arrays for results
 N = len(files)
