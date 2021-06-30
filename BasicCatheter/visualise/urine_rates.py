@@ -21,7 +21,7 @@ sns.set_palette(palette)
 sns.set_style("ticks")
 
 # Location of results files
-folder = '../ExploringCatheter/results/urine_rates'
+folder = '../ExploringCatheter/results/urine_rates_women'
 files = os.listdir(folder)
 
 infection_threshold = np.array([1e3,1e5,1e7]) # Clinical definition of infection occuring
@@ -96,7 +96,7 @@ sub_ax.axvline(50/3, color=palette[2], ls='--',zorder=1)
 sub_ax.set_xlabel("Flow rate (mm$^3$s$^{-1}$)", fontproperties=font, labelpad=2,position=(0.355,0))
 sub_ax.set_ylabel("Time to steady \n state (hr)", fontproperties=font, labelpad=2,position=(0,0.48))
 plt.tight_layout(rect=[-0.05,-0.055,1.04,1.04])
-plt.savefig('urine_rate_phases.svg')
+plt.savefig('urine_rate_phases_w.svg')
 
 plt.rcParams["figure.figsize"] = (1.55,1.55)
 
@@ -115,7 +115,7 @@ plt.ylabel("Time to detection (hr)", fontproperties=font, labelpad=2,position=(0
 #legend_title_props.set_name('serif')
 #legend_title_props.set_size(8)
 plt.tight_layout(rect=[-0.092,-0.113,1.097,1.09])
-plt.savefig('urine_rate_detection.svg')
+plt.savefig('urine_rate_detection_w.svg')
 
 
 plt.figure()
@@ -127,6 +127,6 @@ plt.yticks(fontproperties=font)
 plt.xlabel("Urine rate (mm$^3$s$^{-1}$)", fontproperties=font, labelpad=1.5, position=(0.52,0))
 plt.ylabel('Time to blockage (hr)', fontproperties=font, labelpad=2, position=(0,0.49))
 plt.tight_layout(rect=[-0.091,-0.113,1.096,1.086])
-plt.savefig('urine_rate_blockage.svg')
+plt.savefig('urine_rate_blockage_w.svg')
 
 plt.show()

@@ -29,6 +29,9 @@
     <Compile Include="initial_conditions.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="phase_space.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="sump_volumes.py">
       <SubType>Code</SubType>
     </Compile>
