@@ -20,11 +20,12 @@ public:
 	double time; // Time of total simulation
 	double dt; // Time-step
 	double print_interval; // Time interval at which to record data
+	double print_num_steps; // Number of x steps at which to output data
 	double dx; // x step
 	double dr; // r step
 
 	PDE(BasicParameters* param, Catheter* catheter,
-		double time = 3600, double dt = 0.1, double print_interval = 600);
+		double time = 3600, double dt = 0.1, double print_interval = 600, double print_num_steps = 11);
 	~PDE();
 
 	// Solve the model for the parameters set. Writes output to console
@@ -39,6 +40,7 @@ public:
 private:
 	int N; // Number of time steps
 	int print_step; // Time-step at which to output results
+	int print_x_step; // x-step at which to output results
 	double R_square; // Internal catheter radius squared
 	double dr_square; // r step squared
 	double o1; // Constant for outside of catheter: D dt/ dx^2

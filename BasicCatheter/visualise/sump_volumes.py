@@ -59,16 +59,17 @@ for i in range(N):
     index = np.searchsorted(maxy,thresh, side='right')
     times[i] = dt*index if index!=t_len else np.nan
 
-plt.scatter(sump_volumes[sump_volumes<=1e6],times[sump_volumes<=1e6],s=4)
+plt.scatter(sump_volumes[sump_volumes<=1e6],times[sump_volumes<=1e6],s=4, color=palette[0])
 sns.despine()
 plt.xscale('log')
+plt.ylim(4033,4073)
 plt.locator_params(axis='x',tight=True, numticks=4)
-plt.locator_params(axis='y',tight=True, nbins=4)
+plt.locator_params(axis='y',tight=True, nbins=3)
 plt.xticks(fontproperties=font)
 plt.yticks(fontproperties=font)
-plt.xlabel('Urine volume (mm$^3$)', fontproperties=font, labelpad=1.5)
-plt.ylabel('Time to blockage (hr)', fontproperties=font, labelpad=2,position=(0,0.47))
-plt.tight_layout(rect=[-0.074,-0.112,1.085,1.07])
+plt.xlabel('Urine volume (mm$^3$)', fontproperties=font, labelpad=1.5, position=(0.46,0))
+plt.ylabel('Time to thick biofilm (hr)', fontproperties=font, labelpad=2,position=(0,0.41))
+plt.tight_layout(rect=[-0.072,-0.112,1.08,1.07])
 plt.savefig('sump_volumes_blockages.pdf')
 plt.show()
 

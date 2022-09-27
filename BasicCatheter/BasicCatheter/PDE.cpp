@@ -4,9 +4,9 @@
 #include "PDE.h"
 
 PDE::PDE(BasicParameters* t_param, Catheter* t_data,
-	double t_time, double t_dt, double t_print_interval) :
+	double t_time, double t_dt, double t_print_interval, double t_print_num_steps) :
 	param(t_param), data(t_data), time(t_time), dt(t_dt),
-	print_interval(t_print_interval)
+	print_interval(t_print_interval), print_num_steps(t_print_num_steps)
 {
 	initialize();
 	stability_check();
@@ -283,7 +283,7 @@ void PDE::find_outflow_density()
 	else {
 		// Find output density (and error estimate) for light simulation
 		// final density = bladder density - circumference * integral of deposition rate along catheter / urine flow rate
-		Integrate1D::results result = Integrate1D::trapezoidal(std::bind(&PDE::deposition, this, _1), 0.0, param->catheter_length);
+		Integrate1D::results result = Integrate1D::trapezoidal(std::bind(&PDE::deposition, this, _1), 0.0, param->catheter_length); // I changed deposition, how does this change now?
 		data->outflow = data->bladder - 2 * 3.14 * param->external_catheter_radius* result.sol/param->urine_rate;
 		data->of_error = data->outflow*result.err/result.sol;
 	}
@@ -304,14 +304,14 @@ void PDE::record(int current_step, std::ofstream &file)
 	find_outflow_density();
 	double out_time = double(current_step) * dt / 3600.0;
 	file << "o" << out_time;
-	for (int i = 0; i < x_len; ++i) {
-		file << "," << data->outside[i];
+	for (int i = 0; i < print_num_steps; ++i) {
+		file << "," << data->outside[i*print_x_step];
 	}
 	file << "\nb" << out_time;
 	file << "," << data->bladder << "\n";
 	file << "i" << out_time ;
-	for (int i = 0; i < x_len; ++i) {
-		file << "," << data->inside[i];
+	for (int i = 0; i < print_num_steps; ++i) {
+		file << "," << data->inside[i*print_x_step];
 	}
 	file << "\nf" << out_time;
 	file << "," << data->outflow << "," << data->of_error << "\n";
@@ -319,20 +319,21 @@ void PDE::record(int current_step, std::ofstream &file)
 
 void PDE::initialize()
 {
-	double l = 1; // Length of catheter in contact with bladder
-	double w = 5e-3; // Depth to which we consider the bladder volume in contact with the catheter
-	double S_c = 2 * 3.14 * param->external_catheter_radius * l; // Surface contact area
-	double V_c = 3.14 * (l + w) * (param->external_catheter_radius + w) // Contact volume
-		* (param->external_catheter_radius + w) - 3.14 * l 
-		* param->external_catheter_radius * param->external_catheter_radius; 
 	x_len = data->x_len;
 	r_len = data->r_len;
 	N = int(time / dt);
 	print_step = int(print_interval / dt);
+	print_x_step = int((x_len - 1) / (print_num_steps - 1));
 	dx = param->catheter_length / (double(x_len)-1);
 	dr = param->catheter_radius / (double(r_len) - 1);
 	R_square = std::pow(param->catheter_radius, 2);
 	dr_square = dr * dr;
+	double l = dx; // Length of catheter in contact with bladder
+	double w = 5e-3; // Depth to which we consider the bladder volume in contact with the catheter
+	double S_c = 2 * 3.14 * param->external_catheter_radius * l; // Surface contact area
+	double V_c = 3.14 * (l + w) * (param->external_catheter_radius + w) // Contact volume
+		* (param->external_catheter_radius + w) - 3.14 * l
+		* param->external_catheter_radius * param->external_catheter_radius;
 	o1 = param->surface_diffusivity * dt / (dx*dx);
 	o2 = 1.0 - 2.0 * o1 + param->growth_rate1 * dt;
 	o3 = param->growth_rate1 * dt / param->carrying_capacity1;
@@ -354,7 +355,9 @@ void PDE::initialize()
 	of1 = 4.0 * dr / R_square; 
 	of2 = 4.0 * dr * dr_square / (R_square * R_square); 
 	h = param->urine_rate / (27 * 3.14 * param->viscosity);
+	std::cout << "Number of points within early region " << h/dx << "\n";
 	cj = 0.5835 * param->diffusivity * std::cbrt(param->urine_rate / (std::pow(param->catheter_radius, 3) * param->diffusivity));
+	std::cout << "coefficient of deposition rate " << cj << "\n";
 }
 
 void PDE::stability_check()
@@ -364,11 +367,11 @@ void PDE::stability_check()
 		std::cout << "D dt / dx^2 = " << o1 << " > 0.5, simulation unstable \n";
 		exit(EXIT_FAILURE);
 	}
-	else if (f1 + f7b > 0.5) // Stability check for inside flow
+	/*else if (f1 + f7b > 0.5) // Stability check for inside flow
 	{
 		std::cout << "( D dt / dr^2  = " << f1 << " ) + (u dt / dx = " << f7b << " ) > 0.5, simulation unstable \n";
 		exit(EXIT_FAILURE);
-	}
+	}*/
 }
 
 double PDE::deposition(double x) {
@@ -401,7 +404,7 @@ void PDE::step_light()
 		*/
 		data->inside[j] = i1 * (data->old_inside[j + 1]
 			+ data->old_inside[j - 1]) + data->old_inside[j] * (i2 - i3
-				* data->old_inside[j]) + dt * deposition(j * dx);
+				* data->old_inside[j]) + dt*deposition(j*dx);
 		
 	}
 
@@ -415,7 +418,7 @@ void PDE::step_light()
 	// Top of inside. Diffusion across from outside
 	data->inside[0] = i1 * data->old_inside[1]
 		+ coi * data->old_outside[x_len - 1] + data->old_inside[0]
-		* (i2 - i3 * data->old_inside[0]) + dt * deposition(0.0);
+		* (i2 - i3 * data->old_inside[0]) + dt*deposition(0.0);
 
 	// Bladder is a well-mixed volume with coupling to catheter outside
 	data->bladder = data->bladder * (b1 - b2 * data->bladder)

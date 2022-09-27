@@ -44,6 +44,9 @@ for i in range(N):
     lengths[i] = info['catheter length']
     t_len = int(info['simulation length']/info['print interval']) # number of time steps
     dt = float(info['print interval']/3600) # print interval (hrs)
+    r=float(info['outside growth rate'])
+    D=float(info['surface diffusivity'])
+    inverse_speed = 0.5/(np.sqrt(r*D)*3600*24)
 
     outflow = np.zeros(t_len)
     for j in range(0, t_len):
@@ -51,19 +54,21 @@ for i in range(N):
 
     # Find times at which outflow crosses threshold
     indices = np.searchsorted(outflow,infection_threshold, side='right')
-    times[i] = [dt*index if index!=len(outflow) else np.nan for index in indices]
+    times[i] = [dt*index/24 if index!=len(outflow) else np.nan for index in indices]
 
 print(times)
+print(inverse_speed)
 #plt.plot(lengths, times)
-plt.scatter(lengths,[time[0] for time in times], label='10$^3$ mm$^{{-3}}$',s=4)
-plt.scatter(lengths,[time[1] for time in times], label='10$^5$ mm$^{{-3}}$',s=4)
-plt.scatter(lengths,[time[2] for time in times], label='10$^{7}$ mm$^{{-3}}$',s=4)
+plt.scatter(lengths,[time[0] for time in times], label='10$^3$ mm$^{{-3}}$',s=4,color=palette[0],zorder=2)
+#plt.scatter(lengths,[time[1] for time in times], label='10$^5$ mm$^{{-3}}$',s=4,color=palette[1])
+#plt.scatter(lengths,[time[2] for time in times], label='10$^7$ mm$^{{-3}}$',s=4,color=palette[3])
+plt.plot(lengths, lengths*inverse_speed, color=palette[2], ls='--',zorder=1)
 sns.despine()
 plt.locator_params(tight=True, nbins=3)
 plt.xticks(fontproperties=font)
 plt.yticks(fontproperties=font)
 plt.xlabel('Urethral length (mm)', fontproperties=font, labelpad=2, position=(0.475,0))
-plt.ylabel('Time to detection (hr)', fontproperties=font, labelpad=2, position=(0,0.485))
+plt.ylabel('Time to detection (days)', fontproperties=font, labelpad=2, position=(0,0.435))
 plt.tight_layout(rect=[-0.072,-0.068,1.075,1.07])
 plt.savefig('catheter_lengths_timescale.pdf')
 plt.show()

@@ -1,2 +1,3 @@
 ﻿  ExploringCatheter.cpp
+C:\Users\freya\source\repos\catheter\BasicCatheter\ExploringCatheter\ExploringCatheter.cpp(42,12): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
   ExploringCatheter.vcxproj -> C:\Users\freya\Source\Repos\catheter\BasicCatheter\Debug\ExploringCatheter.exe
