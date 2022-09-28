@@ -219,11 +219,11 @@ palette = sns.color_palette(colours)
 sns.set_palette(palette)
 sns.set_style("ticks")
 plt.rcParams['font.family'] = 'serif'
-gs_kw = dict(width_ratios=[1,1], height_ratios=[1,1,0.3,1,1])
+gs_kw = dict(width_ratios=[1,1], height_ratios=[1,1,0.1,1,1])
 big_fig, ax = plt.subplots(5,2, sharex=True, sharey=True, gridspec_kw=gs_kw)
 print(plt.rcParams['font.family'])
 
-bigfiles = ['../BasicCatheter/initial_conditions/skin.csv','../BasicCatheter/initial_conditions/uniform.csv','../BasicCatheter/initial_conditions/bladder.csv','../BasicCatheter/initial_conditions/bag.csv']
+bigfiles = ['../BasicCatheter/initial_conditions/skin.csv','../BasicCatheter/initial_conditions/bag.csv','../BasicCatheter/initial_conditions/uniform.csv','../BasicCatheter/initial_conditions/bladder.csv']
 
 for f in range(4):
     file = bigfiles[f]
@@ -269,14 +269,14 @@ for f in range(4):
 
 ax[2,0].set_title('(a) Infection originates \nfrom skin', fontproperties=font2, va='top')
 ax[2,0].axis('off')
-ax[2,1].set_title('(b) Initial contamination \nis uniform over \nextraluminal surface', fontproperties=font2, va='top')
+ax[2,1].set_title('(b) Infection originates \nfrom drainage bag', fontproperties=font2, va='top')
 ax[2,1].axis('off')
 big_fig.add_subplot(111,frameon=False)
 plt.tick_params(labelcolor='none',which='both',top=False,bottom=False,left=False,right=False)
 plt.ylabel('Bacterial density (mm$^{-2}$)', labelpad=3.0, fontproperties=font)
 plt.xlabel('Distance up urethra (mm)', labelpad=1.5, fontproperties=font)
-plt.text(0.225,-0.13, '(c) Pre-existing bladder \ncontamination before \ncatheter insertion', fontproperties=font2, ha='center', va='top')
-plt.text(0.775,-0.13, '(d) Infection originates \nfrom drainage bag', fontproperties=font2, ha='center', va='top')
-plt.tight_layout(rect=[-0.137,-0.072,1.07,1.035])
+plt.text(0.225,-0.13, '(c) Initial contamination \nis uniform over \nextraluminal surface', fontproperties=font2, ha='center', va='top')
+plt.text(0.775,-0.13, '(d) Pre-existing bladder \ncontamination before \ncatheter insertion', fontproperties=font2, ha='center', va='top')
+plt.tight_layout(rect=[-0.137,-0.072,1.065,1.035])
 plt.savefig("ic_bigfig.pdf")
 

@@ -29,6 +29,9 @@
     <Compile Include="diffusion.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="diffusion_compare.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="initial_conditions.py">
       <SubType>Code</SubType>
     </Compile>
