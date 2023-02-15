@@ -11,6 +11,7 @@ from matplotlib.font_manager import FontProperties
 plt.rcParams["figure.figsize"] = (3.2,3.2)
 plt.rcParams['xtick.major.pad']='4'
 plt.rcParams['ytick.major.pad']='4'
+plt.rcParams['text.usetex'] = True
 plt.rcParams['font.family'] = 'serif'
 plt.rcParams['font.size'] = '8'
 font = FontProperties()
@@ -40,6 +41,10 @@ hdul_files = os.listdir(hdul_folder)
 
 #  Threshold value for blockage
 blockage_thresh = 1e7
+
+# set urine rate choices
+#double urine_rates[29] = { 5,6,7,8,9,10,11,12,13,14,15,16,17,18,18.5,19,19.5,20,21,22,23,24,25,27.5,30,32.5,35,37.5,40 };
+filter = [0,2,4,6,8,10,12,15,18,20,22,23,24,25,26,27,28]
 
 # Process data
 
@@ -98,7 +103,7 @@ for i in range(N):
 # Low diffusion, urethral length
 
 # Arrays for results
-N = len(ldul_files)
+N = len(ldul_files)-2
 ld_lengths = np.zeros(N)
 ldul_time_to_block = np.zeros(N)
 # Open files and read in data
@@ -124,7 +129,7 @@ for i in range(N):
 # High diffusion, urethral length
 
 # Arrays for results
-N = len(ldul_files)
+N = len(hdul_files)-2
 hd_lengths = np.zeros(N)
 hdul_time_to_block = np.zeros(N)
 # Open files and read in data
@@ -147,35 +152,35 @@ for i in range(N):
     index = np.searchsorted(maxy,blockage_thresh, side='right')
     hdul_time_to_block[i] = dt*index if index!=t_len else np.nan
 
+print(ld_urine_rates)
+print(ld_urine_rates[filter])
+
 # Set up figure/axes
-gs_kw = dict(width_ratios=[1,1], height_ratios=[1,0.1,1])
-big_fig, ax = plt.subplots(3,2, sharex='col', sharey=False, gridspec_kw=gs_kw)
+gs_kw = dict(width_ratios=[1,1], height_ratios=[1,1])
+big_fig, ax = plt.subplots(2,2, sharex='col', sharey='row', gridspec_kw=gs_kw)
 
-ax[0,0].scatter(ld_urine_rates, ldur_time_to_block/24,s=4)
-ax[0,0].set_yticks([168,169])
-ax[2,0].scatter(hd_urine_rates, hdur_time_to_block/24,s=4)
-ax[2,0].set_yticks([2.5,3])
+ax[0,0].scatter(ld_urine_rates[filter], ldur_time_to_block[filter]/24,s=4)
+ax[1,0].scatter(hd_urine_rates[filter], hdur_time_to_block[filter]/24,s=4)
 ax[0,1].scatter(ld_lengths, ldul_time_to_block/24,s=4)
-ax[0,1].set_yticks([400,800])
-ax[2,1].scatter(hd_lengths, hdul_time_to_block/24,s=4)
-ax[2,1].set_yticks([4,8])
+ax[0,1].set_yticks([300,600])
+ax[1,1].scatter(hd_lengths, hdul_time_to_block/24,s=4)
+ax[1,1].set_yticks([3,6])
+ax[1,1].set_xticks([60,120])
 
-ax[2,0].set_xlabel('Urine rate (mm$^3$s$^{-1}$)', labelpad=1.5)
-ax[2,1].set_xlabel('Urethral length (mm)', labelpad=1.5)
+ax[1,0].set_xlabel('Urine rate (mm$^3$s$^{-1}$)', labelpad=11, va='bottom')
+ax[1,1].set_xlabel('Urethral length (mm)', labelpad=11, va='bottom')
 sns.despine()
-#ax[1,0].set_title('(a) Varying urine production \nrate for $D_S=10^{-8}$', fontproperties=font2, va='top')
-ax[1,0].axis('off')
-#ax[1,1].set_title('(b) Varying urethral length \nfor $D_S=10^{-8}$', fontproperties=font2, va='top')
-ax[1,1].axis('off')
 
 big_fig.add_subplot(111,frameon=False)
 plt.tick_params(labelcolor='none',which='both',top=False,bottom=False,left=False,right=False)
-plt.ylabel('Time to thick biofilm (days)', labelpad=3.5, fontproperties=font)
-plt.text(0.2,0.525, '(a) Varying urine production \nrate for $D_S=10^{-8}$', fontproperties=font2, ha='center', va='top')
-plt.text(0.775,0.525, '(b) Varying urethral length \nfor $D_S=10^{-8}$', fontproperties=font2, ha='center', va='top')
-plt.text(0.2,-0.17, '(c) Varying urine production \nrate for $D_S=10^{-4}$', fontproperties=font2, ha='center', va='top')
-plt.text(0.775,-0.17, '(d) Varying urethral length \nfor $D_S=10^{-4}$', fontproperties=font2, ha='center', va='top')
+plt.ylabel('Time to biofilm (days)', labelpad=3.5, fontproperties=font)
+plt.text(0.01,0.97, '(a)', fontproperties=font)
+plt.text(0.545,0.97, '(b)', fontproperties=font)
+plt.text(0.01,0.44, '(c)', fontproperties=font)
+plt.text(0.545,0.44, '(d)', fontproperties=font)
+plt.text(1.05,0.6, '$D_S=10^{-8}$ mm$^2$s$^{-1}$', fontproperties=font, rotation='vertical')
+plt.text(1.05,0.05, '$D_S=10^{-4}$ mm$^2$s$^{-1}$', fontproperties=font, rotation='vertical')
 
-plt.tight_layout(rect=[-0.13,-0.165,1.075,1.04])
+plt.tight_layout(rect=[-0.12,-0.098,1.04,1.04])
 plt.savefig("diffusion_comparison.pdf")
 #plt.show()

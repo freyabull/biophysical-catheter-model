@@ -2,8 +2,11 @@
   "ExpandedNodes": [
     "",
     "\\BasicCatheter",
-    "\\BasicCatheter\\BasicCatheter"
+    "\\BasicCatheter\\BasicCatheter",
+    "\\BasicCatheter\\visualise",
+    "\\BasicCatheter\\visualise\\visualise",
+    "\\BasicCatheter\\visualise\\visualise\\Include"
   ],
-  "SelectedNode": "\\BasicCatheter\\BasicCatheter\\PDE.cpp",
+  "SelectedNode": "\\BasicCatheter\\visualise\\initial_conditions.py",
   "PreviewInSolutionExplorer": false
 }

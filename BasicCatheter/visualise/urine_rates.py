@@ -8,11 +8,10 @@ import os
 from matplotlib.font_manager import FontProperties
 
 # Graphics settings
-plt.rcParams["figure.figsize"] = (3.1,3.1)
+plt.rcParams["figure.figsize"] = (3.2,3.2)
 plt.rcParams['xtick.major.pad']='4'
 plt.rcParams['ytick.major.pad']='4'
-plt.rcParams['font.family'] = 'serif'
-plt.rcParams['font.size'] = '8'
+plt.rcParams['text.usetex'] = True
 font = FontProperties()
 font.set_name('serif')
 font.set_size(8)
@@ -20,6 +19,8 @@ colours = np.array([(68,120,33), (141,211,95), (255,179,128), (255,221,85), (179
 palette = sns.color_palette(colours)
 sns.set_palette(palette)
 sns.set_style("ticks")
+plt.rcParams['font.family'] = 'serif'
+plt.rcParams['font.size'] = '8'
 
 # Location of results files
 folder = '../ExploringCatheter/results/urine_rates'
@@ -86,13 +87,13 @@ main_ax.plot(urine_rates,max_infect,zorder=2)
 sns.despine()
 main_ax.set_yscale('log')
 main_ax.axvline(50/3, color=palette[2], ls='--',zorder=1, label='Typical\npatient\nflow rate')
-main_ax.legend(prop=font, bbox_to_anchor=(0.34, 0.21),handlelength=1,handletextpad=0.5,frameon=False)
+#main_ax.legend(prop=font, bbox_to_anchor=(0.34, 0.21),handlelength=1,handletextpad=0.5,frameon=False)
 plt.locator_params(axis='y',tight=True, numticks=4)
 plt.locator_params(axis='x',tight=True, nbins=4)
 plt.xticks(fontproperties=font)
 plt.yticks(fontproperties=font)
-main_ax.set_xlabel("Urine flow rate (mm$^3$s$^{-1}$)", fontproperties=font, labelpad=2)
-main_ax.set_ylabel("Max bladder density (mm$^{-3}$)", fontproperties=font, labelpad=2)
+main_ax.set_xlabel("Urine production rate (mm$^3$s$^{-1}$)", fontproperties=font, labelpad=2)
+main_ax.set_ylabel("Steady state bacterial density (mm$^{-3}$)", fontproperties=font, labelpad=2)
 sub_ax = fig.add_axes([0.739, 0.745, 0.25, 0.25])
 sub_ax2 = fig.add_axes([0.739, 0.47, 0.25, 0.25], sharex=sub_ax)
 sub_ax.tick_params(labelbottom=False)
@@ -102,15 +103,15 @@ sub_ax.plot(urine_rates, time_to_max/24,zorder=2)
 sub_ax.axvline(50/3, color=palette[2], ls='--',zorder=1)
 sub_ax.set_yticks([170,190])
 sub_ax.set_ylim((167,191))
-sub_ax.set_ylabel("Time (days)", fontproperties=font, labelpad=2.5,position=(0,0.53))
+sub_ax.set_ylabel("Time (days)", fontproperties=font, labelpad=1.5,position=(0,0.53))
 sub_ax2.plot(urine_rates,max_infect)
 sub_ax2.axvline(50/3, color=palette[2], ls='--',zorder=1)
 sub_ax2.set_yticks([0,1e6])
 sub_ax2.set_yticklabels(['0','$10^6$'])
 sub_ax2.set_ylim((-5e4,105e4))
-sub_ax2.set_ylabel("Density (mm$^{-3}$)", fontproperties=font, labelpad=0, position=(0,0.46))
+sub_ax2.set_ylabel("Density (mm$^{-3}$)", fontproperties=font, labelpad=2, position=(0,0.46))
 sub_ax2.set_xlabel("Urine (mm$^3$s$^{-1}$)", fontproperties=font, labelpad=2,position=(0.48,0))
-plt.tight_layout(rect=[-0.043,-0.044,1.033,1.036])
+plt.tight_layout(rect=[-0.035,-0.036,1.033,1.034])
 plt.savefig('urine_rate_phases.pdf')
 
 
@@ -192,4 +193,48 @@ plt.savefig('urine_rate_blockage.pdf')
 #plt.tight_layout(rect=[-0.043,-0.044,1.033,1.036])
 #plt.savefig('urine_rate_3mt_var.svg')
 
-plt.show()
+#plt.show()
+
+plt.rcParams["figure.figsize"] = (4.0,4.0)
+plt.rcParams['text.usetex'] = True
+plt.rcParams['xtick.major.pad']='4'
+plt.rcParams['ytick.major.pad']='4'
+plt.rcParams['font.family'] = 'serif'
+plt.rcParams['font.size'] = '12'
+font = FontProperties()
+font.set_name('serif')
+font.set_size(12)
+
+fig, main_ax = plt.subplots()
+
+main_ax.scatter(urine_rates,max_infect,zorder=2,color=palette[1])
+main_ax.plot(urine_rates,max_infect,zorder=2)
+sns.despine()
+main_ax.set_yscale('log')
+main_ax.axvline(50/3, color=palette[2], ls='--',zorder=1, label='Typical\npatient\nflow rate')
+#main_ax.legend(prop=font, bbox_to_anchor=(0.34, 0.21),handlelength=1,handletextpad=0.5,frameon=False)
+plt.locator_params(axis='y',tight=True, numticks=4)
+plt.locator_params(axis='x',tight=True, nbins=4)
+plt.xticks(fontproperties=font)
+plt.yticks(fontproperties=font)
+main_ax.set_xlabel("Urine production rate (mm$^3$s$^{-1}$)", fontproperties=font, labelpad=2)
+main_ax.set_ylabel("Steady state bacterial density (mm$^{-3}$)", fontproperties=font, labelpad=2)
+sub_ax = fig.add_axes([0.739, 0.745, 0.25, 0.25])
+sub_ax2 = fig.add_axes([0.739, 0.47, 0.25, 0.25], sharex=sub_ax)
+sub_ax.tick_params(labelbottom=False)
+plt.xticks(fontproperties=font)
+plt.yticks(fontproperties=font)
+sub_ax.plot(urine_rates, time_to_max/24,zorder=2)
+sub_ax.axvline(50/3, color=palette[2], ls='--',zorder=1)
+sub_ax.set_yticks([170,190])
+sub_ax.set_ylim((167,191))
+sub_ax.set_ylabel("Time (days)", fontproperties=font, labelpad=1.5,position=(0,0.53))
+sub_ax2.plot(urine_rates,max_infect)
+sub_ax2.axvline(50/3, color=palette[2], ls='--',zorder=1)
+sub_ax2.set_yticks([0,1e6])
+sub_ax2.set_yticklabels(['0','$10^6$'])
+sub_ax2.set_ylim((-5e4,105e4))
+sub_ax2.set_ylabel("Density (mm$^{-3}$)", fontproperties=font, labelpad=2, position=(0,0.45))
+sub_ax2.set_xlabel("Urine (mm$^3$s$^{-1}$)", fontproperties=font, labelpad=2,position=(0.48,0))
+plt.tight_layout(rect=[-0.035,-0.037,1.033,1.034])
+plt.savefig('thesis_urine_rate_phases.pdf')

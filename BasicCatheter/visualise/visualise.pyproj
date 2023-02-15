@@ -26,6 +26,9 @@
     <Compile Include="catheter_length.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="detection_time.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="diffusion.py">
       <SubType>Code</SubType>
     </Compile>
