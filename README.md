@@ -8,8 +8,7 @@ of the catheter tubing.
 2. The bladder is modelled as a well-mixed volume, with an influx of bacteria
 from the top of the outer catheter.
 3. The inside of the catheter is modelled as a bacteria containing fluid 
-dripping down a surface under gravity. The timescale of the droplet is assumed 
-to be negligible compared to that of a bacterium. The adhesion of bacteria to 
+flowing down a pipe under gravity. The adhesion of bacteria to 
 the surface is modelled as diffusion to an absorbing surface. On the surface 
 of the catheter the behaviour of the bacteria are again modelled by a Fisher
 wave equation, this time with a source term.
