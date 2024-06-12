@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <utility>
+#include <cmath>
 class Catheter // Data for the current time-step, should be initialised with any initial and/or boundary conditions
 {
 public:

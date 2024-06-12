@@ -521,7 +521,6 @@ void PDE::solve_light()
 
 void PDE::solve_light(std::ofstream& file)
 {
-	clock_t start_step = clock();
 	// Check if there is external contamination from the skin
 	if (data->skin_concentration < 0)
 	{

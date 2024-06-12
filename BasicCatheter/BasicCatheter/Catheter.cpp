@@ -14,22 +14,22 @@ Catheter::Catheter() :
 Catheter::Catheter(double t_skin_conc, double t_bag_conc, int t_x_len, 
 	               int t_r_len) :
 	outside(t_x_len, 0.0), old_outside(t_x_len, 0.0), inside(t_x_len, 0.0), 
-	old_inside(t_x_len, 0.0), flow(t_x_len*t_r_len, 0.0), 
-	old_flow(t_x_len* t_r_len, 0.0), bladder(0.0), outflow(0.0), of_error(0.0),
+	old_inside(t_x_len, 0.0), bladder(0.0), outflow(0.0), of_error(0.0),
 	skin_concentration(t_skin_conc), bag_concentration(t_bag_conc), 
-	x_len(t_x_len), r_len(t_r_len)
+	x_len(t_x_len), r_len(t_r_len), flow(t_x_len*t_r_len, 0.0), 
+	old_flow(t_x_len* t_r_len, 0.0)
 {
 }
 
 Catheter::Catheter(std::vector<double> t_outside, double t_bladder,
 	               std::vector<double> t_inside, double t_skin_conc, 
 	               double t_bag_conc, int t_r_len) :
-	outside(t_outside), old_outside(t_outside), bladder(t_bladder), 
-	outflow(0.0), of_error(0.0), inside(t_inside), old_inside(t_inside),
-	flow(t_outside.size()* t_r_len, t_bladder),
-	old_flow(t_outside.size()* t_r_len, t_bladder), 
+	outside(t_outside), old_outside(t_outside), inside(t_inside), 
+	old_inside(t_inside), bladder(t_bladder), outflow(0.0), of_error(0.0),
 	skin_concentration(t_skin_conc), bag_concentration(t_bag_conc), 
-	x_len(t_outside.size()), r_len(t_r_len)
+	x_len(t_outside.size()), r_len(t_r_len), 
+	flow(t_outside.size()* t_r_len, t_bladder),
+	old_flow(t_outside.size()* t_r_len, t_bladder)
 {
 	// Ensure bacterial concentration in flow is zero at surface
 	for (int i = 0; i < x_len; ++i) { set_flow(i, 0, 0.0); }
@@ -46,7 +46,7 @@ void Catheter::update()
 	std::swap(inside, old_inside);
 	std::swap(flow, old_flow);
 	// Avoid issues arising from a zero carrying capacity
-	if (isnan(bladder)) { bladder = 0.0; } 
+	if (std::isnan(bladder)) { bladder = 0.0; } 
 }
 
 double Catheter::get_flow(int i, int j)
