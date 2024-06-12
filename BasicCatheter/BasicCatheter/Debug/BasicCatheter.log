@@ -1,4 +1,0 @@
-﻿  BasicCatheter.cpp
-  Importing getopt library
-C:\Users\freya\source\repos\catheter\BasicCatheter\BasicCatheter\BasicCatheter.cpp(62,12): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
-  BasicCatheter.vcxproj -> C:\Users\freya\Source\Repos\catheter\BasicCatheter\Debug\BasicCatheter.exe
