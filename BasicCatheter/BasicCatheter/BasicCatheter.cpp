@@ -24,35 +24,82 @@ int main(int argc, char **argv)
 	clock_t start, end;
 	start = clock();
     // Define variables
-	double diffusivity = 1e-4; // diffusivity of bacteria in urine, in mm^2/s
-	double surface_diffusivity = 1e-7; // diffusivity of bacteria on catheter, in mm^2/s
-	double growth_rate1 = std::log(2.0) / 3600.0; // Growth rate of bacteria on outside of catheter, per s
-	double carrying_capacity1 = 1e7; // Carrying capacity of bacteria on outside of catheter, per mm^2
-	double growth_rate2 = std::log(2.0) / 1800.0; // Growth rate of bacteria in bladder, per s
-	double carrying_capacity2 = 1e6; // Carrying capacity of bacteria in bladder, per mm^3 
-	double growth_rate3 = std::log(2.0) / 3600.0; // Growth rate of bacteria on inside of catheter, per s
-	double carrying_capacity3 = 1e7; // Carrying capacity of bacteria on inside of catheter, per mm^2
-	double urine_rate = 5.0;//1.0e3 / 60.0; // Rate of generation of urine by kidneys, in mm^3/s 
-	double catheter_radius = 1.0; // Radius of catheter in mm
+	std::string file_name; // File for output to be written to
+	double catheter_length; // Length of catheter, in mm
+	double sump_volume; // Volume of residual urine in bladder, in mm^3
+	double urine_rate; // Rate of generation of urine by kidneys, in mm^3/s 
+	double catheter_radius; // Radius of catheter in mm
+	double surface_diffusivity; // diffusivity of bacteria on catheter, in mm^2/s
+	double diffusivity; // diffusivity of bacteria in urine, in mm^2/s
+	double growth_rate1; // Growth rate of bacteria on outside of catheter, per s
+	double growth_rate2; // Growth rate of bacteria in bladder, per s
+	double carrying_capacity1; // Carrying capacity of bacteria on outside of catheter, per mm^2
+	double carrying_capacity2; // Carrying capacity of bacteria in bladder, per mm^3 
+
+	// Open the input file
+	const char* param_file_name = "params.txt";
+	std::ifstream param_file(param_file_name);
+	if (!param_file.is_open()) {
+		std::cout << "Unable to open parameter file " << param_file_name << " proceeding with preset parameters" << std::endl;
+		// Set variables from preset values
+		file_name = "default_results.csv"; // File for output to be written to
+		catheter_length = 40.0; // Length of catheter, in mm
+		sump_volume = 5.0e4; // Volume of residual urine in bladder, in mm^3
+		urine_rate = 1.0e3 / 60.0; // Rate of generation of urine by kidneys, in mm^3/s 
+		catheter_radius = 1.0; // Radius of catheter in mm
+		surface_diffusivity = 1e-6; // diffusivity of bacteria on catheter, in mm^2/s
+		diffusivity = 1e-4; // diffusivity of bacteria in urine, in mm^2/s
+		growth_rate1 = std::log(2.0) / 3600.0; // Growth rate of bacteria on outside of catheter, per s
+		growth_rate2 = std::log(2.0) / 1800.0; // Growth rate of bacteria in bladder, per s
+		carrying_capacity1 = 1e7; // Carrying capacity of bacteria on outside of catheter, per mm^2
+		carrying_capacity2 = 1e6; // Carrying capacity of bacteria in bladder, per mm^3 
+	} else {
+		// Read parameters from input file
+		param_file >> file_name;
+		param_file >> catheter_length;
+		param_file >> sump_volume;
+		param_file >> urine_rate;
+		param_file >> catheter_radius;
+		param_file >> surface_diffusivity;
+		param_file >> diffusivity;
+		param_file >> growth_rate1;
+		param_file >> growth_rate2;
+		param_file >> carrying_capacity1;
+		param_file >> carrying_capacity2;
+	}
+	param_file.close();
+	
+
+	// Fixed parameters
+	double growth_rate3 = growth_rate1; // Growth rate of bacteria on inside of catheter, per s
+	double carrying_capacity3 = carrying_capacity1; // Carrying capacity of bacteria on inside of catheter, per mm^2
 	double stickiness = 1.0; // Probability of a bacterium sticking to surface if it comes into contact
-	double sump_volume = 5.0e4; // Volume of residual urine in bladder, in mm^3
-	double catheter_length = 40.0; // Length of catheter, in mm
 	double skin_concentration = 1e2; // Concentration of bacteria on skin (ie boundary condition)
 	double bag_concentration = -0.1; // Concentration of bacteria in drainage bag (ie boundary condition)
 	int initial_condition = 0; // Type of initial conditions
-	int x_len = catheter_length * 170; // Number of x points
-	int r_len = 11; // Number of r points
-	const char* file_name = "results.csv"; // File for output to be written to
 	double initial_skin_conc = 1e2; // Concentration of bacteria on the skin at time of catheter insertion
 	double lambda = 1.0/catheter_length; // Scale factor for exponential distributions
-	int simulation_length = 86400 * 200; // Timeframe of simulation, in s
-	double dt = 60; // Time step
-	int print_interval = 3600; // Time interval at which to output data (s)
+	int r_len = 11; // Number of r points
 	int print_num_steps = 101; // Number of x steps at which to output data
 	double catheter_external_radius = catheter_radius;// +1.0; // External catheter radius in mm
 	double attachment_rate = 4*3.14*diffusivity*1e-3; // Rate at which a bacterium in contact sticks (s^-1) Smoluchowski - 4 pi D sigma
 	double detachment_rate = growth_rate1; // Rate at which a bacterium in contact detaches (s^-1) say all new cells formed at boundary detach
 	double viscosity = 0.83; // Viscosity of urine (mm^2 s^-1)
+	
+	// Calculated parameters
+	int x_len = catheter_length * std::max(3,2*int(std::ceil(std::sqrt(growth_rate1/surface_diffusivity)))); // Number of x points
+	double dx = catheter_length / x_len;
+	std::cout << "Number of x points is  " << x_len << ", dx is " << dx << std::endl;
+	int simulation_length = 86400 * 10 + int(std::ceil(0.5*catheter_length/std::sqrt(growth_rate1*surface_diffusivity))); // Timeframe of simulation
+	double dt_cond1 = dx*dx / (20*surface_diffusivity); // Condition on dt for numerical stability of catheter surface
+	double dt_cond2 = sump_volume / (urine_rate + attachment_rate*3.14*(dx + 5e-3)*(catheter_external_radius + 5e-3)); // Condition on dt for numerical stability of surface-bladder coupling
+	double dt_cond3 = 1 / std::abs(growth_rate2 - lambda/sump_volume);
+	double dt = std::min(std::min(std::min(60.0, dt_cond3), dt_cond2),dt_cond1); // Time step
+	std::cout << "dt = " << dt << " and T = " << simulation_length << std::endl;
+	int print_interval = std::max(3600, int(simulation_length/(24*200))); // Time interval at which to output data (s)
+	std::cout << "Stability conditions on dt: Surface " << dt_cond1 << " Bladder-surface " << dt_cond2 << " Bladder " << dt_cond3 << std::endl;
+	
+	
 
 
 	// Set initial conditions
