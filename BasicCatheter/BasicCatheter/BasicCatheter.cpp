@@ -90,7 +90,7 @@ int main(int argc, char **argv)
 	int x_len = catheter_length * std::max(3,2*int(std::ceil(std::sqrt(growth_rate1/surface_diffusivity)))); // Number of x points
 	double dx = catheter_length / x_len;
 	std::cout << "Number of x points is  " << x_len << ", dx is " << dx << std::endl;
-	int simulation_length = 86400 * 10 + int(std::ceil(0.5*catheter_length/std::sqrt(growth_rate1*surface_diffusivity))); // Timeframe of simulation
+	int simulation_length = 86400 * 20 +2*int(std::ceil(0.5*catheter_length/std::sqrt(growth_rate1*surface_diffusivity))) + 20*int(std::ceil(1/growth_rate1+1/growth_rate2)); // Timeframe of simulation
 	double dt_cond1 = dx*dx / (20*surface_diffusivity); // Condition on dt for numerical stability of catheter surface
 	double dt_cond2 = sump_volume / (urine_rate + attachment_rate*3.14*(dx + 5e-3)*(catheter_external_radius + 5e-3)); // Condition on dt for numerical stability of surface-bladder coupling
 	double dt_cond3 = 1 / std::abs(growth_rate2 - lambda/sump_volume);
