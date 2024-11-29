@@ -80,7 +80,7 @@ int main(int argc, char **argv)
 	double initial_skin_conc = 1e2; // Concentration of bacteria on the skin at time of catheter insertion
 	double lambda = 1.0/catheter_length; // Scale factor for exponential distributions
 	int r_len = 11; // Number of r points
-	int print_num_steps = 101; // Number of x steps at which to output data
+	int target_print_num_steps = 101; // Number of x steps at which to output data
 	double catheter_external_radius = catheter_radius;// +1.0; // External catheter radius in mm
 	double attachment_rate = 4*3.14*diffusivity*1e-3; // Rate at which a bacterium in contact sticks (s^-1) Smoluchowski - 4 pi D sigma
 	double detachment_rate = growth_rate1; // Rate at which a bacterium in contact detaches (s^-1) say all new cells formed at boundary detach
@@ -98,7 +98,8 @@ int main(int argc, char **argv)
 	std::cout << "dt = " << dt << " and T = " << simulation_length << std::endl;
 	int print_interval = std::max(3600, int(simulation_length/(24*200))); // Time interval at which to output data (s)
 	std::cout << "Stability conditions on dt: Surface " << dt_cond1 << " Bladder-surface " << dt_cond2 << " Bladder " << dt_cond3 << std::endl;
-	
+	int print_num_steps = std::min(int(x_len/(int((x_len - 1) / (target_print_num_steps - 1))))+1,x_len);
+	std::cout << "Target print steps " << target_print_num_steps << ", actual print steps " << print_num_steps << std::endl;
 	
 
 
