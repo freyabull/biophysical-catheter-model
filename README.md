@@ -1,5 +1,7 @@
 # README
 
+[![DOI](https://zenodo.org/badge/814253783.svg)](https://doi.org/10.5281/zenodo.14674826)
+
 This project provides a set of classes, methods and a program in order to 
 simulate the spread of a bacterial infection within a urinary catheter.
 The model is broken down into 3 parts.
