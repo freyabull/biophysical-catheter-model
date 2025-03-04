@@ -18,7 +18,7 @@ Raw data for the effect of varying urine production rate can be found in the fol
 
 ## Interpretting csv files
 The first two lines of the csv file contain the simulation metadata. The third line will be empty. Starting at line 4, for each output timestep $t$:
-- line $4t$ will contain the bacteria per mm$^2$ on the external catheter surface (for each output position $x$)
-- line $4t+1$ will contain the bacteria per mm$^3$ in the residual urine in the bladder
-- line $4t+2$ will contain the bacteria per mm$^2$ on the internal catheter surface (for each output position $x$)
-- line $4t+3$ will contain the mean bacteria per mm$^3$ in the outflowing urine, estimated by trapezoidal integration, and the error on this estimate.
+- line $4t$ will contain the bacteria per $mm^2$ on the external catheter surface (for each output position $x$)
+- line $4t+1$ will contain the bacteria per $mm^3$ in the residual urine in the bladder
+- line $4t+2$ will contain the bacteria per $mm^2$ on the internal catheter surface (for each output position $x$)
+- line $4t+3$ will contain the mean bacteria per $mm^3$ in the outflowing urine, estimated by trapezoidal integration, and the error on this estimate.
